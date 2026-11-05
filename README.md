@@ -3,11 +3,13 @@
 [![testes](https://github.com/agdala/monitoring-5w-kit/actions/workflows/tests.yml/badge.svg)](https://github.com/agdala/monitoring-5w-kit/actions/workflows/tests.yml)
 [![relatório](https://github.com/agdala/monitoring-5w-kit/actions/workflows/pages.yml/badge.svg)](https://agdala.github.io/monitoring-5w-kit/)
 
+Monitoramento de resposta humanitária no formato 5W, com validação dos relatos de parceiros, acompanhamento de metas e estimativa de pessoas únicas sem dupla contagem.
+
 **Relatório publicado:** <https://agdala.github.io/monitoring-5w-kit/>
 
-Monitoramento de resposta humanitária no formato **5W** (quem faz o quê, onde, quando e para
-quem): validação dos relatos mensais dos parceiros, acompanhamento de metas e estimativa de
-pessoas únicas quando vários parceiros atendem o mesmo lugar.
+O formato **5W** responde quem faz o quê, onde, quando e para quem. O projeto valida os relatos
+mensais dos parceiros, acompanha as metas e estima as pessoas únicas quando vários parceiros
+atendem o mesmo lugar.
 
 > [!IMPORTANT]
 > **Dados 100% sintéticos.** Parceiros, pessoas, metas e relatos são gerados por código com
@@ -284,13 +286,6 @@ docs/            protecao_de_dados.md
 tests/           testes por etapa (pytest)
 ```
 
-## 9. Projetos relacionados
-
-- [sismigra-analytics](https://github.com/agdala/sismigra-analytics): pipeline sobre microdados
-  públicos de registro migratório, com o mesmo controle de divulgação k = 5.
-- [record-linkage-kit](https://github.com/agdala/record-linkage-kit): cruzamento de registros com
-  dados sintéticos, o passo que a deduplicação real exige.
-
 ---
 
 ## English summary
@@ -318,6 +313,19 @@ socioeconomic integration and health, with annual targets per state.
   checks that `reports/metricas.json` reproduces exactly.
 - **Limits:** generator, rules and targets were written by the same author; one heuristic threshold
   and the official method were chosen after seeing the synthetic ground truth.
+
+## Projetos relacionados
+
+Os quatro repositórios formam um ciclo de dados, da coleta ao monitoramento:
+
+| Etapa | Projeto | O que faz | Publicado |
+|---|---|---|---|
+| 1. Coletar | [xlsform-validator](https://github.com/agdala/xlsform-validator) | Qualidade, consentimento e LGPD em formulários KoboToolbox/ODK | [versão web](https://agdala.github.io/xlsform-validator/) |
+| 2. Transformar e publicar | [sismigra-analytics](https://github.com/agdala/sismigra-analytics) | Pipeline bronze/prata/ouro com Python, DuckDB e dbt, com controle de divulgação | [dbt docs](https://agdala.github.io/sismigra-analytics/) |
+| 3. Integrar | [record-linkage-kit](https://github.com/agdala/record-linkage-kit) | Deduplicação e cruzamento de cadastros, com revisão humana e pseudonimização | [relatório](https://agdala.github.io/record-linkage-kit/) |
+| 4. Monitorar | **monitoring-5w-kit** (este repositório) | Relatos de parceiros, metas e dupla contagem | [relatório](https://agdala.github.io/monitoring-5w-kit/) |
+
+Autoria: Agda Santos, com auxílio de ferramentas de IA.
 
 ## Licença
 
