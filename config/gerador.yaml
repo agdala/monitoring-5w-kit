@@ -1,0 +1,52 @@
+# Parâmetros do gerador de dados SINTÉTICOS. Nenhum número aqui vem de uma operação real.
+semente: 20250
+ano: 2025
+prazo_dia: 10            # relato do mês M vence no dia 10 do mês M+1
+n_parceiros: 25
+n_parceiros_nacionais: 3 # atuam em várias UFs, só nas capitais e polos
+
+# Municípios de atuação (código IBGE) e peso da demanda. UFs com vários municípios e peso alto
+# concentram a resposta; as demais têm atuação espalhada, com um município e poucos parceiros.
+municipios:
+  - {codigo: 1400100, peso: 10, pin: 22000}  # Boa Vista/RR
+  - {codigo: 1400456, peso: 7,  pin: 9000}   # Pacaraima/RR
+  - {codigo: 1400472, peso: 2,  pin: 1500}   # Rorainópolis/RR
+  - {codigo: 1302603, peso: 8,  pin: 16000}  # Manaus/AM
+  - {codigo: 3550308, peso: 6,  pin: 14000}  # São Paulo/SP
+  - {codigo: 3518800, peso: 2,  pin: 3000}   # Guarulhos/SP
+  - {codigo: 3509502, peso: 2,  pin: 2500}   # Campinas/SP
+  - {codigo: 4106902, peso: 5,  pin: 8000}   # Curitiba/PR
+  - {codigo: 4104808, peso: 2,  pin: 2500}   # Cascavel/PR
+  - {codigo: 4108304, peso: 2,  pin: 2000}   # Foz do Iguaçu/PR
+  - {codigo: 4205407, peso: 3,  pin: 4000}   # Florianópolis/SC
+  - {codigo: 4204202, peso: 2,  pin: 3000}   # Chapecó/SC
+  - {codigo: 4209102, peso: 2,  pin: 2500}   # Joinville/SC
+  - {codigo: 4314902, peso: 4,  pin: 6000}   # Porto Alegre/RS
+  - {codigo: 4305108, peso: 2,  pin: 2500}   # Caxias do Sul/RS
+  - {codigo: 5300108, peso: 2,  pin: 3500}   # Brasília/DF
+  - {codigo: 3106200, peso: 1,  pin: 2000}   # Belo Horizonte/MG
+  - {codigo: 3304557, peso: 1,  pin: 2500}   # Rio de Janeiro/RJ
+  - {codigo: 1501402, peso: 1,  pin: 1500}   # Belém/PA
+  - {codigo: 5002704, peso: 1,  pin: 1500}   # Campo Grande/MS
+  - {codigo: 5103403, peso: 1,  pin: 1200}   # Cuiabá/MT
+  - {codigo: 2927408, peso: 1,  pin: 1000}   # Salvador/BA
+  - {codigo: 2611606, peso: 1,  pin: 1000}   # Recife/PE
+
+# População atendida
+cobertura_min: 0.15        # fração da população em necessidade (PIN) alcançada no ano
+cobertura_max: 0.45
+prob_encaminhamento: 0.30  # pessoa atendida também por um segundo parceiro do mesmo município
+prob_terceiro_parceiro: 0.08
+prob_feminino: 0.52
+faixas_etarias: {"0_17": 0.30, "18_59": 0.62, "60m": 0.08}
+
+# Erros injetados nos relatos (fração dos relatos; acumulado = fração das séries mensais)
+erros:
+  relato_duplicado: 0.020
+  acumulado_como_mensal: 0.04
+  municipio_invalido: 0.010
+  municipio_fora_uf: 0.010
+  desagregacao_inconsistente: 0.030
+  indicador_fora_do_quadro: 0.006
+  valor_implausivel: 0.006
+  fora_do_prazo: 0.070

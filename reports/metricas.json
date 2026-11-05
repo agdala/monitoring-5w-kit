@@ -1,0 +1,23 @@
+{
+  "geracao": {
+    "erros_injetados_por_tipo": {
+      "acumulado_como_mensal": 96,
+      "desagregacao_inconsistente": 107,
+      "fora_do_prazo": 249,
+      "indicador_fora_do_quadro": 21,
+      "municipio_fora_uf": 36,
+      "municipio_invalido": 36,
+      "relato_duplicado": 71,
+      "valor_implausivel": 21
+    },
+    "municipios": 23,
+    "parceiros": 25,
+    "pct_pessoas_com_mais_de_um_parceiro": 14.62,
+    "pct_relatos_com_erro_injetado": 17.53,
+    "pessoas_unicas": 57510,
+    "relatos": 3634,
+    "relatos_com_erro_injetado": 637,
+    "ufs": 14,
+    "vinculos_pessoa_parceiro": 66981
+  }
+}
