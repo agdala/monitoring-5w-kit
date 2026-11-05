@@ -1,5 +1,7 @@
 # monitoring-5w-kit
 
+**Português** | [English](README.en.md)
+
 [![testes](https://github.com/agdala/monitoring-5w-kit/actions/workflows/tests.yml/badge.svg)](https://github.com/agdala/monitoring-5w-kit/actions/workflows/tests.yml)
 [![relatório](https://github.com/agdala/monitoring-5w-kit/actions/workflows/pages.yml/badge.svg)](https://agdala.github.io/monitoring-5w-kit/)
 
