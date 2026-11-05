@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monitoramento 5W</title>
+<meta name="description" content="Relatório de monitoramento 5W com dados 100% sintéticos: qualidade dos relatos, dupla contagem e alcance das metas.">
+<style>
+:root {
+  color-scheme: light;
+  --surface-0: #f4f3f0; --surface-1: #fcfcfb; --borda: #e2e1dc;
+  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #7a7974;
+  --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a;
+  --div-neg-2: #c23b3a; --div-neg-1: #f0a09f; --div-mid: #d9d8d2; --div-pos-1: #86b6ef; --div-pos-2: #256abf;
+  --sem-meta: #f4f3f0; --trilho: #ecebe7; --aviso-fundo: #fff6e0; --aviso-borda: #eda100; --contorno: #c9c8c2;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --surface-0: #121211; --surface-1: #1a1a19; --borda: #383835;
+    --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #91908a;
+    --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70;
+    --div-neg-2: #e66767; --div-neg-1: #8a4141; --div-mid: #4a4a46; --div-pos-1: #2f5f9c; --div-pos-2: #6da7ec;
+    --sem-meta: #222220; --trilho: #2a2a28; --aviso-fundo: #2b2410; --aviso-borda: #c98500; --contorno: #55554f;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-0: #121211; --surface-1: #1a1a19; --borda: #383835;
+  --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #91908a;
+  --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70;
+  --div-neg-2: #e66767; --div-neg-1: #8a4141; --div-mid: #4a4a46; --div-pos-1: #2f5f9c; --div-pos-2: #6da7ec;
+  --sem-meta: #222220; --trilho: #2a2a28; --aviso-fundo: #2b2410; --aviso-borda: #c98500; --contorno: #55554f;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--surface-0); color: var(--text-primary);
+       font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1040px; margin: 0 auto; padding: 24px 16px 64px; }
+header h1 { font-size: 1.7rem; margin: 0 0 4px; }
+header p { margin: 0; color: var(--text-secondary); }
+.aviso { background: var(--aviso-fundo); border-left: 4px solid var(--aviso-borda); padding: 10px 14px;
+         border-radius: 6px; margin: 16px 0; }
+section { background: var(--surface-1); border: 1px solid var(--borda); border-radius: 10px; padding: 20px;
+          margin-top: 20px; }
+h2 { font-size: 1.2rem; margin: 0 0 4px; }
+.sub { color: var(--text-secondary); margin: 0 0 14px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 14px 0; }
+.kpi { border: 1px solid var(--borda); border-radius: 8px; padding: 12px; }
+.kpi .r { color: var(--text-secondary); font-size: .85rem; }
+.kpi .v { font-size: 1.6rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .d { color: var(--text-muted); font-size: .8rem; }
+.grafico { width: 100%; height: auto; display: block; }
+.mapa { max-width: 760px; }
+.grafico text { fill: var(--text-secondary); font-size: 11px; }
+.grafico .t-rotulo { fill: var(--text-primary); }
+.grafico .t-grupo { fill: var(--text-primary); font-weight: 650; font-size: 12px; }
+.grafico .t-valor { fill: var(--text-primary); font-variant-numeric: tabular-nums; }
+.grafico .t-eixo { fill: var(--text-muted); }
+.grafico .t-mapa { fill: var(--text-primary); font-size: 10px; font-weight: 600; pointer-events: none;
+                   paint-order: stroke; stroke: var(--surface-1); stroke-width: 3px; }
+.grafico .ref { stroke: var(--text-muted); stroke-dasharray: 3 3; }
+.grafico .barra, .barra { fill: var(--series-1); }
+.trilho { fill: var(--trilho); }
+.grafico .alvo { fill: transparent; }
+.grafico .marca:hover .alvo { fill: var(--trilho); }
+.grafico .uf { stroke: var(--contorno); stroke-width: 0.8; }
+.grafico .uf:hover { stroke: var(--text-primary); stroke-width: 1.5; }
+.legenda { display: flex; gap: 16px; flex-wrap: wrap; margin: 6px 0 10px; color: var(--text-secondary); font-size: .88rem; }
+.legenda i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.tabela { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .88rem; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--borda); vertical-align: top; }
+th { color: var(--text-secondary); font-weight: 600; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+details { margin-top: 12px; }
+summary { cursor: pointer; color: var(--text-secondary); }
+.selo { display: inline-block; padding: 0 7px; border-radius: 10px; border: 1px solid var(--borda); font-size: .8rem; }
+ul.achados li { margin-bottom: 6px; }
+a { color: var(--series-1); }
+footer { color: var(--text-muted); font-size: .85rem; margin-top: 24px; }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>Monitoramento 5W da resposta</h1>
+  <p>Quem faz o quê, onde, quando e para quem · {{ q.ano }} · {{ ger.parceiros }} parceiros em {{ ger.ufs }} UFs e {{ ger.municipios }} municípios</p>
+</header>
+<div class="aviso"><strong>Dados 100% sintéticos.</strong> Parceiros, pessoas, metas e relatos foram gerados por código
+com semente fixa. Nenhum número representa uma operação real. Código e método em <a href="{{ repo }}">{{ repo }}</a>.</div>
+
+<section id="resumo">
+  <h2>1. Resumo executivo</h2>
+  <div class="kpis">
+  {% for rotulo, valor, detalhe in kpis %}
+    <div class="kpi"><div class="r">{{ rotulo }}</div><div class="v">{{ valor }}</div><div class="d">{{ detalhe }}</div></div>
+  {% endfor %}
+  </div>
+  <ul class="achados">{% for a in achados %}<li>{{ a }}</li>{% endfor %}</ul>
+</section>
+
+<section id="metas">
+  <h2>2. Alcance das metas por setor</h2>
+  <p class="sub">Realizado no ano dividido pela meta, somando as UFs com meta. Cada indicador é agregado no tempo pela sua regra
+  (soma, pico do mês consolidado ou último valor). Pessoas atendidas usam o método oficial: {{ nome_oficial | lower }}.</p>
+  {{ svg_alcance | safe }}
+  <details><summary>Tabela: meta e realizado por indicador</summary><div class="tabela"><table>
+    <tr><th>Setor</th><th>Indicador</th><th>Unidade</th><th class="n">Meta</th><th class="n">Realizado</th><th class="n">Alcance</th></tr>
+    {% for r in por_ind %}<tr><td>{{ r.setor_nome }}</td><td>{{ r.indicador }} {{ r.indicador_nome }}</td><td>{{ r.unidade }}</td>
+    <td class="n">{{ num(r.meta) }}</td><td class="n">{{ num(r.realizado) }}</td><td class="n">{{ num(r.alcance_pct, 1) }}%</td></tr>{% endfor %}
+  </table></div></details>
+  {% if abaixo %}<details><summary>Metas abaixo de 70% (indicador x UF): {{ abaixo | length }}</summary><div class="tabela"><table>
+    <tr><th>Indicador</th><th>UF</th><th class="n">Meta</th><th class="n">Realizado</th><th class="n">Alcance</th></tr>
+    {% for r in abaixo %}<tr><td>{{ r.indicador }} {{ r.indicador_nome }}</td><td>{{ r.uf }}</td><td class="n">{{ num(r.meta) }}</td>
+    <td class="n">{{ num(r.realizado) }}</td><td class="n">{{ num(r.alcance_pct, 1) }}%</td></tr>{% endfor %}
+  </table></div></details>{% endif %}
+</section>
+
+<section id="mapa">
+  <h2>3. Alcance da meta de pessoas atendidas por UF</h2>
+  <p class="sub">Soma dos indicadores de pessoas atendidas dos quatro setores (realizado sobre meta). Escala divergente:
+  cinza é a faixa da meta (90% a 110%), vermelho abaixo e azul acima. Malha simplificada das UFs a partir da malha municipal do IBGE.</p>
+  {{ svg_mapa | safe }}
+  <details><summary>Tabela: alcance por UF</summary><div class="tabela"><table>
+    <tr><th>UF</th><th class="n">Meta</th><th class="n">Realizado</th><th class="n">Alcance</th></tr>
+    {% for r in por_uf %}<tr><td>{{ r.uf }}</td><td class="n">{{ num(r.meta) }}</td><td class="n">{{ num(r.realizado) }}</td>
+    <td class="n">{{ num(r.alcance_pct, 1) }}%</td></tr>{% endfor %}
+  </table></div></details>
+</section>
+
+<section id="dupla-contagem">
+  <h2>4. Dupla contagem: três métodos contra o gabarito</h2>
+  <p class="sub">Quando vários parceiros atuam no mesmo município, a mesma pessoa pode ser relatada por mais de um.
+  O gabarito ({{ num(agr.pessoas_unicas_gabarito) }} pessoas únicas) vem da população sintética, antes dos relatos existirem.
+  Erro percentual sobre os relatos válidos, por setor.</p>
+  <div class="legenda">{% for m in metodos %}<span><i style="background:var(--series-{{ loop.index }})"></i>{{ m.nome }}{% if m.oficial %} (oficial){% endif %}</span>{% endfor %}</div>
+  {{ svg_metodos | safe }}
+  <div class="tabela"><table>
+    <tr><th>Método</th><th class="n">Pessoas estimadas</th><th class="n">Erro total, relatos válidos</th>
+    <th class="n">Erro total, relatos sem erros</th><th class="n">Erro absoluto médio por setor x UF</th></tr>
+    {% for m in metodos %}<tr><td>{{ m.nome }}{% if m.oficial %} <span class="selo">oficial</span>{% endif %}</td>
+    <td class="n">{{ num(m.estimado) }}</td><td class="n">{{ num(m.erro_validos, 1) }}%</td>
+    <td class="n">{{ num(m.erro_sem_erros, 1) }}%</td><td class="n">{{ num(m.mape, 1) }}%</td></tr>{% endfor %}
+  </table></div>
+  <p class="sub" style="margin-top:12px">Leitura: sobre relatos sem erros, a soma é o teto e o máximo é o piso do valor real.
+  Sobre relatos válidos, parte do erro vem dos relatos bloqueados (que reduzem todos os métodos), então um erro pequeno
+  pode ser compensação entre dupla contagem e perda de dados. A união sob independência depende da população em
+  necessidade (PIN) e supõe que os parceiros alcançam pessoas ao acaso; encaminhamentos entre parceiros violam essa suposição.</p>
+  <details><summary>Tabela: setor x UF</summary><div class="tabela"><table>
+    <tr><th>Setor</th><th>UF</th><th class="n">Gabarito</th><th class="n">Soma</th><th class="n">Máximo</th><th class="n">União</th></tr>
+    {% for r in comp %}<tr><td>{{ r.setor }}</td><td>{{ r.uf }}</td><td class="n">{{ num(r.gabarito) }}</td>
+    <td class="n">{{ num(r.soma_simples) }} ({{ num(r.erro_soma_simples_pct, 1) }}%)</td>
+    <td class="n">{{ num(r.maximo_municipio) }} ({{ num(r.erro_maximo_municipio_pct, 1) }}%)</td>
+    <td class="n">{{ num(r.uniao_independente) }} ({{ num(r.erro_uniao_independente_pct, 1) }}%)</td></tr>{% endfor %}
+  </table></div></details>
+</section>
+
+<section id="qualidade">
+  <h2>5. Qualidade dos relatos</h2>
+  <p class="sub">Erro bloqueia o relato até a correção; alerta não bloqueia. Detecção medida contra os erros injetados pelo gerador.</p>
+  <div class="tabela"><table>
+    <tr><th>Regra</th><th>Severidade</th><th>Erro injetado</th><th class="n">Injetados</th><th class="n">Detectados</th>
+    <th class="n">Detecção</th><th class="n">Sinalizados</th><th class="n">Precisão</th></tr>
+    {% for r in det %}<tr><td>{{ r.regra }} {{ r.regra_nome }}</td><td>{{ r.severidade }}</td><td>{{ r.tipo_erro_injetado }}</td>
+    <td class="n">{{ num(r.injetados) }}</td><td class="n">{{ num(r.detectados) }}</td>
+    <td class="n">{% if r.taxa_deteccao_pct == r.taxa_deteccao_pct %}{{ num(r.taxa_deteccao_pct, 1) }}%{% else %}·{% endif %}</td>
+    <td class="n">{{ num(r.sinalizados) }}</td>
+    <td class="n">{% if r.precisao_pct == r.precisao_pct %}{{ num(r.precisao_pct, 1) }}%{% else %}·{% endif %}</td></tr>{% endfor %}
+  </table></div>
+  <h3 style="font-size:1rem;margin:20px 0 4px">Índice de qualidade por parceiro</h3>
+  <p class="sub">50% validade (relatos sem erro) + 25% conformidade (sem variação atípica) + 25% pontualidade. Faixas: A ≥ 95, B ≥ 85, C &lt; 85.
+  O detalhe de cada pendência, com a mensagem para o parceiro, está em <code>reports/pendencias_por_parceiro.csv</code>.</p>
+  <div class="tabela"><table>
+    <tr><th>Parceiro</th><th class="n">Relatos</th><th class="n">Erros</th><th class="n">Alertas</th><th class="n">Validade</th>
+    <th class="n">Pontualidade</th><th class="n">Índice</th><th></th><th>Faixa</th></tr>
+    {% for r in qual %}<tr><td>{{ r.parceiro_id }} {{ r.parceiro_nome }}</td><td class="n">{{ num(r.relatos) }}</td>
+    <td class="n">{{ num(r.erro) }}</td><td class="n">{{ num(r.alerta) }}</td><td class="n">{{ num(r.validade_pct, 1) }}%</td>
+    <td class="n">{{ num(r.pontualidade_pct, 1) }}%</td><td class="n">{{ num(r.indice_qualidade, 1) }}</td>
+    <td>{{ r.barra | safe }}</td><td>{{ r.faixa }}</td></tr>{% endfor %}
+  </table></div>
+</section>
+
+<section id="metodo">
+  <h2>6. Método e limites</h2>
+  <ul>
+    <li>Gerador, regras e metas foram escritos pela mesma autora: as taxas de detecção medem a coerência do método, não o desempenho em dados reais.</li>
+    <li>O gabarito de pessoas únicas só existe porque os dados são sintéticos. Em operação real, deduplicar pessoas exige cruzamento de registros com acordo de compartilhamento de dados.</li>
+    <li>Tabelas desagregadas por sexo e faixa etária são publicadas com controle de divulgação: nenhuma célula de 1 a 4 pessoas (k = {{ q.limiar }}), com supressão secundária.</li>
+  </ul>
+</section>
+<footer>Gerado por <code>make run</code> · monitoring-5w-kit · licença MIT</footer>
+</main>
+</body>
+</html>

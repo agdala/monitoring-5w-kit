@@ -24,7 +24,12 @@ def _aggregate(c: Caminhos) -> dict:
     return aggregate.executar(c)
 
 
-ETAPAS = {"generate": _generate, "validate": _validate, "aggregate": _aggregate}
+def _report(c: Caminhos) -> dict:
+    from . import report
+    return report.executar(c)
+
+
+ETAPAS = {"generate": _generate, "validate": _validate, "aggregate": _aggregate, "report": _report}
 
 
 def main(argv: list[str] | None = None) -> int:
