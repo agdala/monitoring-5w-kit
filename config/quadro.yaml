@@ -3,7 +3,7 @@
 # agregacao_tempo: soma (fluxo mensal), maximo (estoque: pico no ano), ultimo (acumulado no ano)
 # principal: indicador de pessoas atendidas do setor, usado na estimativa de pessoas únicas
 ano: 2025
-metodo_oficial_pessoas_unicas: maximo_municipio
+metodo_oficial_pessoas_unicas: uniao_independente  # soma_simples | maximo_municipio | uniao_independente
 limiar_divulgacao: 5
 desagregacoes:
   sexo: {f: Feminino, m: Masculino}
@@ -87,12 +87,12 @@ setores:
 metas:
   ABR-01: {DF: 160, MG: 150, PE: 85, PR: 1500, RJ: 300, RR: 3200, RS: 1400, SP: 1200}
   ABR-02: {DF: 32, MG: 48, PE: 28, PR: 440, RJ: 75, RR: 1200, RS: 230, SP: 330}
-  ABR-03: {DF: 170, MG: 180, PE: 130, PR: 1500, RJ: 420, RR: 9000, RS: 1200, SP: 2700}
+  ABR-03: {DF: 170, MG: 180, PE: 150, PR: 1600, RJ: 610, RR: 11000, RS: 1200, SP: 2700}
   INT-01: {BA: 450, DF: 340, MS: 130, MT: 150, PA: 160, PE: 92, PR: 2800, RR: 2100, RS: 2700, SC: 1900, SP: 1600}
   INT-02: {BA: 71, DF: 100, MS: 46, MT: 40, PA: 54, PE: 27, PR: 570, RR: 460, RS: 350, SC: 340, SP: 350}
   PRO-01: {AM: 6200, BA: 130, DF: 400, MG: 300, MS: 310, MT: 270, PA: 320, PE: 130, PR: 3100, RJ: 800, RR: 3000, RS: 1300, SC: 1500, SP: 2100}
-  PRO-02: {AM: 3700, BA: 110, DF: 320, MG: 550, MS: 270, MT: 470, PA: 210, PE: 220, PR: 2300, RJ: 680, RR: 3700, RS: 1600, SC: 2100, SP: 2200}
+  PRO-02: {AM: 3600, BA: 120, DF: 320, MG: 670, MS: 270, MT: 460, PA: 190, PE: 280, PR: 2300, RJ: 630, RR: 3800, RS: 1600, SC: 2100, SP: 2700}
   PRO-03: {AM: 2200, BA: 39, DF: 100, MG: 110, MS: 96, MT: 210, PA: 99, PE: 44, PR: 1200, RJ: 280, RR: 1300, RS: 480, SC: 1000, SP: 1200}
   SAU-01: {AM: 2200, MG: 320, PE: 390, PR: 2000, RJ: 540, RR: 8100, RS: 1700, SC: 2000, SP: 5700}
-  SAU-02: {AM: 5700, MG: 1000, PE: 920, PR: 6400, RJ: 1200, RR: 22000, RS: 4400, SC: 5000, SP: 13000}
-  SAU-03: {AM: 3, MG: 3, PE: 2, PR: 15, RJ: 2, RR: 5, RS: 14, SC: 9, SP: 36}
+  SAU-02: {AM: 8400, MG: 1100, PE: 970, PR: 6600, RJ: 1600, RR: 24000, RS: 4600, SC: 5400, SP: 13000}
+  SAU-03: {AM: 4, MG: 4, PE: 3, PR: 20, RJ: 3, RR: 5, RS: 11, SC: 8, SP: 38}

@@ -19,7 +19,12 @@ def _validate(c: Caminhos) -> dict:
     return validate.executar(c)
 
 
-ETAPAS = {"generate": _generate, "validate": _validate}
+def _aggregate(c: Caminhos) -> dict:
+    from . import aggregate
+    return aggregate.executar(c)
+
+
+ETAPAS = {"generate": _generate, "validate": _validate, "aggregate": _aggregate}
 
 
 def main(argv: list[str] | None = None) -> int:

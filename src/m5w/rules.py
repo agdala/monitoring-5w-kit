@@ -20,7 +20,8 @@ CHAVE_RELATO = ["parceiro_id", "mes", "indicador", "municipio_cod"]
 SERIE = ["parceiro_id", "municipio_cod", "indicador"]
 FATOR_IMPLAUSIVEL = 10
 FATOR_ATIPICO = 4
-PISO_MEDIANA = 3
+PISO_MEDIANA_IMPLAUSIVEL = 1  # era 3: deixava passar "zero a mais" em séries de 1 a 4 (ex.: SAU-03)
+PISO_MEDIANA_ATIPICO = 3
 
 
 @dataclass(frozen=True)
@@ -65,7 +66,8 @@ def _desagregacao(d):
 
 def _implausivel(d):
     acima_pin = d.pessoas & d.pin.notna() & (d.valor > d.pin)
-    acima_serie = d.n_serie.ge(3) & (d.valor > FATOR_IMPLAUSIVEL * d.mediana_serie.clip(lower=PISO_MEDIANA))
+    limiar = FATOR_IMPLAUSIVEL * d.mediana_serie.clip(lower=PISO_MEDIANA_IMPLAUSIVEL)
+    acima_serie = d.n_serie.ge(3) & (d.valor >= limiar)
     return (d.valor < 0) | acima_pin | acima_serie
 
 
@@ -106,7 +108,7 @@ def _fora_prazo(d):
 
 def _atipico(d):
     alvo = d.regra_tempo.isin(["soma", "maximo"]) & d.n_serie.ge(3)
-    limiar = FATOR_ATIPICO * d.mediana_serie.clip(lower=PISO_MEDIANA)
+    limiar = FATOR_ATIPICO * d.mediana_serie.clip(lower=PISO_MEDIANA_ATIPICO)
     return alvo & (d.valor > limiar) & ~_implausivel(d)
 
 
@@ -133,7 +135,7 @@ REGRAS: list[Regra] = [
           _desagregacao, "desagregacao_inconsistente"),
     Regra("V07", "Valor implausível", "erro",
           "O valor {valor} de {indicador} em {municipio_cod} é implausível: supera a população em necessidade "
-          "do município ou é mais de 10 vezes o padrão do parceiro. Confira se há zeros a mais.",
+          "do município ou chega a 10 vezes a mediana do parceiro. Confira se há zeros a mais.",
           _implausivel, "valor_implausivel"),
     Regra("V08", "Acumulado informado como mensal", "erro",
           "A partir de {mes}, a série de {indicador} em {municipio_cod} cresce todos os meses, como um total "
