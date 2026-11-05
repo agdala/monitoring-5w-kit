@@ -5,6 +5,7 @@ Cores por papel, definidas como variáveis CSS no template (claro e escuro):
 - três métodos de pessoas únicas: --series-1..3 em ordem fixa (azul, laranja, verde-água);
 - mapa: escala divergente em torno de 100% da meta (vermelho abaixo, cinza na faixa da meta, azul acima).
 Toda marca tem <title> (dica ao passar o mouse) e todo gráfico tem uma tabela equivalente no relatório.
+Cada <svg> abre com <title> e <desc> (lidos por leitores de tela) que resumem o que o gráfico mostra.
 """
 
 from __future__ import annotations
@@ -26,6 +27,17 @@ FAIXAS_MAPA = [
 def _num(v: float, casas: int = 1) -> str:
     s = f"{v:,.{casas}f}"
     return s.replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def _acessivel(id_: str, titulo: str, descricao: str) -> tuple[str, str]:
+    """Atributos e cabeçalho acessível de um <svg>: <title> e <desc> ligados por aria-labelledby."""
+    attrs = f'role="img" aria-labelledby="{id_}-titulo {id_}-desc"'
+    cab = f'<title id="{id_}-titulo">{escape(titulo)}</title><desc id="{id_}-desc">{escape(descricao)}</desc>'
+    return attrs, cab
+
+
+def _lista(itens: list[str]) -> str:
+    return itens[0] if len(itens) == 1 else ", ".join(itens[:-1]) + " e " + itens[-1]
 
 
 def barras_alcance(linhas: list[dict], largura: int = 640) -> str:
@@ -57,8 +69,17 @@ def barras_alcance(linhas: list[dict], largura: int = 640) -> str:
     ref = x(100)
     eixo = (f'<line x1="{ref}" y1="{topo - 6}" x2="{ref}" y2="{y}" class="ref"/>'
             f'<text x="{ref}" y="{topo - 10}" text-anchor="middle" class="t-eixo">meta = 100%</text>')
-    return (f'<svg viewBox="0 0 {largura} {y + 6}" role="img" class="grafico" '
-            f'aria-label="Alcance das metas por indicador">{eixo}{"".join(partes)}</svg>')
+    menor, maior = min(linhas, key=lambda r: r["valor"]), max(linhas, key=lambda r: r["valor"])
+    atingidas = sum(r["valor"] >= 100 for r in linhas)
+    attrs, cab = _acessivel(
+        "grafico-alcance", "Alcance das metas por indicador",
+        f"Barras horizontais com o realizado sobre a meta de {len(linhas)} indicadores, agrupados por setor, "
+        f"e linha de referência em 100%. {atingidas} de {len(linhas)} indicadores atingiram a meta. "
+        f"Menor alcance: {menor['rotulo']}, {_num(menor['valor'])}%. "
+        f"Maior: {maior['rotulo']}, {_num(maior['valor'])}%. "
+        f"Os valores estão na tabela abaixo do gráfico.")
+    return (f'<svg viewBox="0 0 {largura} {y + 6}" {attrs} class="grafico">'
+            f'{cab}{eixo}{"".join(partes)}</svg>')
 
 
 def barras_erro_metodos(grupos: list[str], metodos: dict[str, str], valores: dict, largura: int = 640) -> str:
@@ -89,8 +110,16 @@ def barras_erro_metodos(grupos: list[str], metodos: dict[str, str], valores: dic
         eixo.append(f'<text x="{x(t)}" y="{topo - 12}" text-anchor="middle" class="t-eixo">'
                     f'{"+" if t > 0 else ""}{_num(t, 0)}%</text>')
     eixo.append(f'<text x="{zero}" y="{topo - 12}" text-anchor="middle" class="t-eixo">0</text>')
-    return (f'<svg viewBox="0 0 {largura} {y}" role="img" class="grafico" '
-            f'aria-label="Erro percentual de cada método contra o gabarito">{"".join(eixo)}{"".join(partes)}</svg>')
+    total = grupos[-1]
+    resumo = _lista([f"{nome.lower()}, {'+' if valores[total][m] > 0 else ''}{_num(valores[total][m])}%"
+                     for m, nome in metodos.items()])
+    attrs, cab = _acessivel(
+        "grafico-metodos", "Erro percentual de cada método contra o gabarito",
+        f"Barras divergentes em torno de zero com o erro de {len(metodos)} métodos de contagem de pessoas únicas "
+        f"em {_lista(grupos)}. Barra à direita superestima, à esquerda subestima. "
+        f"Erro no {total.lower()}: {resumo}. Os valores estão na tabela abaixo do gráfico.")
+    return (f'<svg viewBox="0 0 {largura} {y}" {attrs} class="grafico">'
+            f'{cab}{"".join(eixo)}{"".join(partes)}</svg>')
 
 
 def barra_mini(valor: float, maximo: float = 100, largura: int = 120) -> str:
@@ -162,6 +191,15 @@ def mapa_alcance(malha: Path, alcance: dict[str, float], largura: int = 560) -> 
         lx += 19 + 7 * len(nome) + 14
     legenda.append(f'<rect x="{lx}" y="{altura + 12}" width="14" height="14" rx="3" style="fill:var(--sem-meta)" '
                    f'class="uf"/><text x="{lx + 19}" y="{altura + 24}" class="t-eixo">sem meta</text>')
-    return (f'<svg viewBox="0 0 {largura + 140} {altura + 34:.0f}" role="img" class="grafico mapa" '
-            f'aria-label="Mapa do Brasil por UF com o percentual de alcance da meta de pessoas atendidas">'
-            f'{"".join(formas)}{"".join(rotulos)}{"".join(legenda)}</svg>')
+    faixas = []
+    for lo, hi, _, nome in FAIXAS_MAPA:
+        ufs = sorted(u for u, v in alcance.items() if (lo is None or v >= lo) and (hi is None or v < hi))
+        if ufs:
+            faixas.append(f"{nome}: {_lista(ufs)}")
+    attrs, cab = _acessivel(
+        "mapa-alcance", "Mapa do Brasil: alcance da meta de pessoas atendidas por UF",
+        f"Mapa das UFs colorido por faixa de alcance da meta de pessoas atendidas, de vermelho (abaixo da meta) "
+        f"a azul (acima), com cinza na faixa de 90% a 110%. {len(alcance)} UFs têm meta. "
+        f"{'; '.join(faixas)}. As demais UFs não têm meta. Os valores estão na tabela abaixo do mapa.")
+    return (f'<svg viewBox="0 0 {largura + 140} {altura + 34:.0f}" {attrs} class="grafico mapa">'
+            f'{cab}{"".join(formas)}{"".join(rotulos)}{"".join(legenda)}</svg>')

@@ -5,11 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Monitoramento 5W</title>
 <meta name="description" content="Relatório de monitoramento 5W com dados 100% sintéticos: qualidade dos relatos, dupla contagem e alcance das metas.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="monitoring-5w-kit · Agda Santos">
+<meta property="og:title" content="Monitoramento 5W: relatos validados, metas e pessoas únicas sem dupla contagem">
+<meta property="og:description" content="{{ num(val.relatos_recebidos) }} relatos sintéticos validados, {{ num(val.deteccao_global_pct, 1) }}% dos erros injetados detectados e pessoas únicas estimadas com erro de {{ erro_pessoas }} contra o gabarito.">
+<meta property="og:url" content="{{ pages_url }}">
+<meta property="og:image" content="{{ pages_url }}social-preview.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="monitoring-5w-kit, etapa Monitorar do ciclo de dados, com os números-chave do relatório">
+<meta name="twitter:card" content="summary_large_image">
 <style>
 :root {
   color-scheme: light;
   --surface-0: #f4f3f0; --surface-1: #fcfcfb; --borda: #e2e1dc;
-  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #7a7974;
+  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #6b6a64; --link: #1d5fb0;
   --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a;
   --div-neg-2: #c23b3a; --div-neg-1: #f0a09f; --div-mid: #d9d8d2; --div-pos-1: #86b6ef; --div-pos-2: #256abf;
   --sem-meta: #f4f3f0; --trilho: #ecebe7; --aviso-fundo: #fff6e0; --aviso-borda: #eda100; --contorno: #c9c8c2;
@@ -18,7 +29,7 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
     --surface-0: #121211; --surface-1: #1a1a19; --borda: #383835;
-    --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #91908a;
+    --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #91908a; --link: #8bbaf2;
     --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70;
     --div-neg-2: #e66767; --div-neg-1: #8a4141; --div-mid: #4a4a46; --div-pos-1: #2f5f9c; --div-pos-2: #6da7ec;
     --sem-meta: #222220; --trilho: #2a2a28; --aviso-fundo: #2b2410; --aviso-borda: #c98500; --contorno: #55554f;
@@ -27,7 +38,7 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
   --surface-0: #121211; --surface-1: #1a1a19; --borda: #383835;
-  --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #91908a;
+  --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #91908a; --link: #8bbaf2;
   --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70;
   --div-neg-2: #e66767; --div-neg-1: #8a4141; --div-mid: #4a4a46; --div-pos-1: #2f5f9c; --div-pos-2: #6da7ec;
   --sem-meta: #222220; --trilho: #2a2a28; --aviso-fundo: #2b2410; --aviso-borda: #c98500; --contorno: #55554f;
@@ -56,7 +67,7 @@ h2 { font-size: 1.2rem; margin: 0 0 4px; }
 .grafico .t-grupo { fill: var(--text-primary); font-weight: 650; font-size: 12px; }
 .grafico .t-valor { fill: var(--text-primary); font-variant-numeric: tabular-nums; }
 .grafico .t-eixo { fill: var(--text-muted); }
-.grafico .t-mapa { fill: var(--text-primary); font-size: 10px; font-weight: 600; pointer-events: none;
+.grafico .t-mapa { fill: var(--text-primary); font-size: 11px; font-weight: 600; pointer-events: none;
                    paint-order: stroke; stroke: var(--surface-1); stroke-width: 3px; }
 .grafico .ref { stroke: var(--text-muted); stroke-dasharray: 3 3; }
 .grafico .barra, .barra { fill: var(--series-1); }
@@ -67,7 +78,14 @@ h2 { font-size: 1.2rem; margin: 0 0 4px; }
 .grafico .uf:hover { stroke: var(--text-primary); stroke-width: 1.5; }
 .legenda { display: flex; gap: 16px; flex-wrap: wrap; margin: 6px 0 10px; color: var(--text-secondary); font-size: .88rem; }
 .legenda i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
-.tabela { overflow-x: auto; }
+.tabela, .rolagem { overflow-x: auto; position: relative; }
+.tabela:focus-visible, .rolagem:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+/* em telas estreitas o gráfico mantém largura mínima legível e rola dentro da própria caixa */
+.rolagem .grafico { min-width: 640px; }
+.rolagem .mapa { min-width: 700px; }
+.dica-rolagem { display: none; color: var(--text-secondary); font-size: .85rem; margin: 0 0 6px; }
+@media (max-width: 720px) { .dica-rolagem { display: block; } }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 table { border-collapse: collapse; width: 100%; font-size: .88rem; }
 th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--borda); vertical-align: top; }
 th { color: var(--text-secondary); font-weight: 600; }
@@ -76,7 +94,7 @@ details { margin-top: 12px; }
 summary { cursor: pointer; color: var(--text-secondary); }
 .selo { display: inline-block; padding: 0 7px; border-radius: 10px; border: 1px solid var(--borda); font-size: .8rem; }
 ul.achados li { margin-bottom: 6px; }
-a { color: var(--series-1); }
+a { color: var(--link); }
 footer { color: var(--text-muted); font-size: .85rem; margin-top: 24px; }
 </style>
 </head>
@@ -103,13 +121,14 @@ com semente fixa. Nenhum número representa uma operação real. Código e méto
   <h2>2. Alcance das metas por setor</h2>
   <p class="sub">Realizado no ano dividido pela meta, somando as UFs com meta. Cada indicador é agregado no tempo pela sua regra
   (soma, pico do mês consolidado ou último valor). Pessoas atendidas usam o método oficial: {{ nome_oficial | lower }}.</p>
-  {{ svg_alcance | safe }}
-  <details><summary>Tabela: meta e realizado por indicador</summary><div class="tabela"><table>
+  <p class="dica-rolagem">Em telas estreitas, arraste para os lados para ver a figura inteira.</p>
+  <div class="rolagem" tabindex="0" role="region" aria-label="Gráfico: alcance das metas por indicador">{{ svg_alcance | safe }}</div>
+  <details><summary>Tabela: meta e realizado por indicador</summary><div class="tabela" tabindex="0" role="region" aria-label="Tabela: meta e realizado por indicador"><table>
     <tr><th>Setor</th><th>Indicador</th><th>Unidade</th><th class="n">Meta</th><th class="n">Realizado</th><th class="n">Alcance</th></tr>
     {% for r in por_ind %}<tr><td>{{ r.setor_nome }}</td><td>{{ r.indicador }} {{ r.indicador_nome }}</td><td>{{ r.unidade }}</td>
     <td class="n">{{ num(r.meta) }}</td><td class="n">{{ num(r.realizado) }}</td><td class="n">{{ num(r.alcance_pct, 1) }}%</td></tr>{% endfor %}
   </table></div></details>
-  {% if abaixo %}<details><summary>Metas abaixo de 70% (indicador x UF): {{ abaixo | length }}</summary><div class="tabela"><table>
+  {% if abaixo %}<details><summary>Metas abaixo de 70% (indicador x UF): {{ abaixo | length }}</summary><div class="tabela" tabindex="0" role="region" aria-label="Tabela: metas abaixo de 70%"><table>
     <tr><th>Indicador</th><th>UF</th><th class="n">Meta</th><th class="n">Realizado</th><th class="n">Alcance</th></tr>
     {% for r in abaixo %}<tr><td>{{ r.indicador }} {{ r.indicador_nome }}</td><td>{{ r.uf }}</td><td class="n">{{ num(r.meta) }}</td>
     <td class="n">{{ num(r.realizado) }}</td><td class="n">{{ num(r.alcance_pct, 1) }}%</td></tr>{% endfor %}
@@ -120,8 +139,9 @@ com semente fixa. Nenhum número representa uma operação real. Código e méto
   <h2>3. Alcance da meta de pessoas atendidas por UF</h2>
   <p class="sub">Soma dos indicadores de pessoas atendidas dos quatro setores (realizado sobre meta). Escala divergente:
   cinza é a faixa da meta (90% a 110%), vermelho abaixo e azul acima. Malha simplificada das UFs a partir da malha municipal do IBGE.</p>
-  {{ svg_mapa | safe }}
-  <details><summary>Tabela: alcance por UF</summary><div class="tabela"><table>
+  <p class="dica-rolagem">Em telas estreitas, arraste para os lados para ver a figura inteira.</p>
+  <div class="rolagem" tabindex="0" role="region" aria-label="Mapa: alcance da meta de pessoas atendidas por UF">{{ svg_mapa | safe }}</div>
+  <details><summary>Tabela: alcance por UF</summary><div class="tabela" tabindex="0" role="region" aria-label="Tabela: alcance por UF"><table>
     <tr><th>UF</th><th class="n">Meta</th><th class="n">Realizado</th><th class="n">Alcance</th></tr>
     {% for r in por_uf %}<tr><td>{{ r.uf }}</td><td class="n">{{ num(r.meta) }}</td><td class="n">{{ num(r.realizado) }}</td>
     <td class="n">{{ num(r.alcance_pct, 1) }}%</td></tr>{% endfor %}
@@ -134,8 +154,9 @@ com semente fixa. Nenhum número representa uma operação real. Código e méto
   O gabarito ({{ num(agr.pessoas_unicas_gabarito) }} pessoas únicas) vem da população sintética, antes dos relatos existirem.
   Erro percentual sobre os relatos válidos, por setor.</p>
   <div class="legenda">{% for m in metodos %}<span><i style="background:var(--series-{{ loop.index }})"></i>{{ m.nome }}{% if m.oficial %} (oficial){% endif %}</span>{% endfor %}</div>
-  {{ svg_metodos | safe }}
-  <div class="tabela"><table>
+  <p class="dica-rolagem">Em telas estreitas, arraste para os lados para ver a figura inteira.</p>
+  <div class="rolagem" tabindex="0" role="region" aria-label="Gráfico: erro de cada método contra o gabarito">{{ svg_metodos | safe }}</div>
+  <div class="tabela" tabindex="0" role="region" aria-label="Tabela: métodos de pessoas únicas"><table>
     <tr><th>Método</th><th class="n">Pessoas estimadas</th><th class="n">Erro total, relatos válidos</th>
     <th class="n">Erro total, relatos sem erros</th><th class="n">Erro absoluto médio por setor x UF</th></tr>
     {% for m in metodos %}<tr><td>{{ m.nome }}{% if m.oficial %} <span class="selo">oficial</span>{% endif %}</td>
@@ -146,7 +167,7 @@ com semente fixa. Nenhum número representa uma operação real. Código e méto
   Sobre relatos válidos, parte do erro vem dos relatos bloqueados (que reduzem todos os métodos), então um erro pequeno
   pode ser compensação entre dupla contagem e perda de dados. A união sob independência depende da população em
   necessidade (PIN) e supõe que os parceiros alcançam pessoas ao acaso; encaminhamentos entre parceiros violam essa suposição.</p>
-  <details><summary>Tabela: setor x UF</summary><div class="tabela"><table>
+  <details><summary>Tabela: setor x UF</summary><div class="tabela" tabindex="0" role="region" aria-label="Tabela: pessoas únicas por setor e UF"><table>
     <tr><th>Setor</th><th>UF</th><th class="n">Gabarito</th><th class="n">Soma</th><th class="n">Máximo</th><th class="n">União</th></tr>
     {% for r in comp %}<tr><td>{{ r.setor }}</td><td>{{ r.uf }}</td><td class="n">{{ num(r.gabarito) }}</td>
     <td class="n">{{ num(r.soma_simples) }} ({{ num(r.erro_soma_simples_pct, 1) }}%)</td>
@@ -158,7 +179,7 @@ com semente fixa. Nenhum número representa uma operação real. Código e méto
 <section id="qualidade">
   <h2>5. Qualidade dos relatos</h2>
   <p class="sub">Erro bloqueia o relato até a correção; alerta não bloqueia. Detecção medida contra os erros injetados pelo gerador.</p>
-  <div class="tabela"><table>
+  <div class="tabela" tabindex="0" role="region" aria-label="Tabela: detecção por regra"><table>
     <tr><th>Regra</th><th>Severidade</th><th>Erro injetado</th><th class="n">Injetados</th><th class="n">Detectados</th>
     <th class="n">Detecção</th><th class="n">Sinalizados</th><th class="n">Precisão</th></tr>
     {% for r in det %}<tr><td>{{ r.regra }} {{ r.regra_nome }}</td><td>{{ r.severidade }}</td><td>{{ r.tipo_erro_injetado }}</td>
@@ -170,9 +191,9 @@ com semente fixa. Nenhum número representa uma operação real. Código e méto
   <h3 style="font-size:1rem;margin:20px 0 4px">Índice de qualidade por parceiro</h3>
   <p class="sub">50% validade (relatos sem erro) + 25% conformidade (sem variação atípica) + 25% pontualidade. Faixas: A ≥ 95, B ≥ 85, C &lt; 85.
   O detalhe de cada pendência, com a mensagem para o parceiro, está em <code>reports/pendencias_por_parceiro.csv</code>.</p>
-  <div class="tabela"><table>
+  <div class="tabela" tabindex="0" role="region" aria-label="Tabela: índice de qualidade por parceiro"><table>
     <tr><th>Parceiro</th><th class="n">Relatos</th><th class="n">Erros</th><th class="n">Alertas</th><th class="n">Validade</th>
-    <th class="n">Pontualidade</th><th class="n">Índice</th><th></th><th>Faixa</th></tr>
+    <th class="n">Pontualidade</th><th class="n">Índice</th><th><span class="sr">Índice em barra</span></th><th>Faixa</th></tr>
     {% for r in qual %}<tr><td>{{ r.parceiro_id }} {{ r.parceiro_nome }}</td><td class="n">{{ num(r.relatos) }}</td>
     <td class="n">{{ num(r.erro) }}</td><td class="n">{{ num(r.alerta) }}</td><td class="n">{{ num(r.validade_pct, 1) }}%</td>
     <td class="n">{{ num(r.pontualidade_pct, 1) }}%</td><td class="n">{{ num(r.indice_qualidade, 1) }}</td>
