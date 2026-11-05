@@ -22,18 +22,62 @@
       "SC": 104.5,
       "SP": 89.8
     },
-    "alcance_por_indicador_pct": {
-      "ABR-01": 105.4,
-      "ABR-02": 93.1,
-      "ABR-03": 76.0,
-      "INT-01": 86.8,
-      "INT-02": 109.2,
-      "PRO-01": 91.2,
-      "PRO-02": 96.2,
-      "PRO-03": 94.4,
-      "SAU-01": 91.4,
-      "SAU-02": 96.1,
-      "SAU-03": 114.6
+    "alcance_por_indicador": {
+      "ABR-01": {
+        "alcance_pct": 105.4,
+        "meta": 7995,
+        "realizado": 8425
+      },
+      "ABR-02": {
+        "alcance_pct": 93.1,
+        "meta": 2383,
+        "realizado": 2219
+      },
+      "ABR-03": {
+        "alcance_pct": 76.0,
+        "meta": 17610,
+        "realizado": 13382
+      },
+      "INT-01": {
+        "alcance_pct": 86.8,
+        "meta": 12422,
+        "realizado": 10785
+      },
+      "INT-02": {
+        "alcance_pct": 109.2,
+        "meta": 2408,
+        "realizado": 2630
+      },
+      "PRO-01": {
+        "alcance_pct": 91.2,
+        "meta": 19860,
+        "realizado": 18108
+      },
+      "PRO-02": {
+        "alcance_pct": 96.2,
+        "meta": 19040,
+        "realizado": 18322
+      },
+      "PRO-03": {
+        "alcance_pct": 94.4,
+        "meta": 8358,
+        "realizado": 7890
+      },
+      "SAU-01": {
+        "alcance_pct": 91.4,
+        "meta": 22950,
+        "realizado": 20969
+      },
+      "SAU-02": {
+        "alcance_pct": 96.1,
+        "meta": 65670,
+        "realizado": 63133
+      },
+      "SAU-03": {
+        "alcance_pct": 114.6,
+        "meta": 96,
+        "realizado": 110
+      }
     },
     "divulgacao": {
       "celulas_de_1_a_4_publicadas": 0,

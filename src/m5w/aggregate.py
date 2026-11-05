@@ -174,7 +174,10 @@ def executar(caminhos: Caminhos | None = None) -> dict:
         "erro_metodos_relatos_validos": resumo_erros(comp),
         "erro_metodos_relatos_sem_erros": resumo_erros(comparacoes["relatos_sem_erros"][1]),
         "alcance_pessoas_por_setor_pct": {r.setor: float(r.alcance_pct) for r in principais.itertuples()},
-        "alcance_por_indicador_pct": {r.indicador: float(r.alcance_pct) for r in por_ind.itertuples()},
+        "alcance_por_indicador": {
+            r.indicador: {"meta": int(r.meta), "realizado": int(r.realizado), "alcance_pct": float(r.alcance_pct)}
+            for r in por_ind.itertuples()
+        },
         "alcance_pessoas_por_uf_pct": {r.uf: float(r.alcance_pct) for r in por_uf.itertuples()},
         "metas_indicador_uf": int(mvr.meta.notna().sum()),
         "metas_atingidas": int((mvr.alcance_pct >= 100).sum()),
