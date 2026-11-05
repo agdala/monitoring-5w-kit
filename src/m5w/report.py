@@ -13,6 +13,7 @@ from .config import Caminhos, carregar_quadro
 from .rules import REGRAS
 
 BASE_URL_REPO = "https://github.com/agdala/monitoring-5w-kit"
+PAGES_URL = "https://agdala.github.io/monitoring-5w-kit/"
 
 
 def _num(v, casas: int = 0) -> str:
@@ -101,6 +102,9 @@ def montar_contexto(c: Caminhos) -> dict:
         "qual": qual.to_dict("records"),
         "abaixo": abaixo.to_dict("records"),
         "repo": BASE_URL_REPO,
+        "pages_url": PAGES_URL,
+        "erro_pessoas": f"{'+' if erros_val[oficial]['erro_total_pct'] > 0 else ''}"
+                        f"{_num(erros_val[oficial]['erro_total_pct'], 2)}%",
     }
 
 
