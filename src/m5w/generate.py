@@ -229,6 +229,10 @@ def gerar_relatos(cfg: dict, quadro, parceiros: pd.DataFrame, atuacao: pd.DataFr
                 mes_amplia = rng.integers(3, 13, size=n_s)
                 df_ind["valor"] = (k[serie] + (df_ind.mes.to_numpy() >= mes_amplia[serie])
                                    - (rng.random(len(df_ind)) < 0.15)).clip(0)
+            if ind != "SAU-03":
+                # picos legítimos (mutirão, campanha): não são erro, mas parecem outlier
+                campanha = rng.random(len(df_ind)) < 0.02
+                df_ind.loc[campanha, "valor"] = df_ind.loc[campanha, "valor"] * rng.integers(3, 9, campanha.sum())
             for c in CELULAS:
                 df_ind[c] = np.nan
         blocos.append(df_ind)
@@ -265,8 +269,12 @@ def injetar_erros(rel: pd.DataFrame, cfg: dict, quadro, muns_ref: pd.DataFrame, 
     for k in escolhidas:
         idx = series.get_group(k).sort_values("mes").index
         cols = ["valor"] + (CELULAS if desag[idx[0]] else [])
-        rel.loc[idx, cols] = rel.loc[idx, cols].cumsum()
-        rel.loc[idx, "tipo_erro"] = "acumulado_como_mensal"
+        # metade das séries vem acumulada o ano todo; a outra metade passa a vir acumulada no meio
+        # do ano (troca do responsável pelo relato). Só os meses afetados contam como erro.
+        inicio = 0 if rng.random() < 0.5 else int(rng.integers(3, len(idx) - 3))
+        acumulado = rel.loc[idx, cols].cumsum()
+        rel.loc[idx[inicio:], cols] = acumulado.loc[idx[inicio:]]
+        rel.loc[idx[inicio:], "tipo_erro"] = "acumulado_como_mensal"
 
     livres = list(rng.permutation(rel.index[rel.tipo_erro == ""]))
     n = len(rel)
@@ -312,7 +320,7 @@ def injetar_erros(rel: pd.DataFrame, cfg: dict, quadro, muns_ref: pd.DataFrame, 
 
     for i in tomar(round(taxas["valor_implausivel"] * n), lambda r: r.valor >= 1):
         cols = ["valor"] + (CELULAS if desag[i] else [])
-        rel.loc[i, cols] = rel.loc[i, cols] * 100  # zeros a mais na digitação
+        rel.loc[i, cols] = rel.loc[i, cols] * int(rng.choice([10, 100]))  # um ou dois zeros a mais
         rel.at[i, "tipo_erro"] = "valor_implausivel"
 
     ano = cfg["ano"]

@@ -14,7 +14,12 @@ def _generate(c: Caminhos) -> dict:
     return generate.executar(c)
 
 
-ETAPAS = {"generate": _generate}
+def _validate(c: Caminhos) -> dict:
+    from . import validate
+    return validate.executar(c)
+
+
+ETAPAS = {"generate": _generate, "validate": _validate}
 
 
 def main(argv: list[str] | None = None) -> int:

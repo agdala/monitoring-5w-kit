@@ -1,7 +1,7 @@
 {
   "geracao": {
     "erros_injetados_por_tipo": {
-      "acumulado_como_mensal": 96,
+      "acumulado_como_mensal": 68,
       "desagregacao_inconsistente": 107,
       "fora_do_prazo": 249,
       "indicador_fora_do_quadro": 21,
@@ -13,11 +13,107 @@
     "municipios": 23,
     "parceiros": 25,
     "pct_pessoas_com_mais_de_um_parceiro": 14.62,
-    "pct_relatos_com_erro_injetado": 17.53,
+    "pct_relatos_com_erro_injetado": 16.76,
     "pessoas_unicas": 57510,
     "relatos": 3634,
-    "relatos_com_erro_injetado": 637,
+    "relatos_com_erro_injetado": 609,
     "ufs": 14,
     "vinculos_pessoa_parceiro": 66981
+  },
+  "validacao": {
+    "deteccao_global_pct": 98.36,
+    "deteccao_por_regra": {
+      "V02": {
+        "detectados": 21,
+        "injetados": 21,
+        "precisao_pct": 100.0,
+        "sinalizados": 21,
+        "taxa_deteccao_pct": 100.0,
+        "tipo": "indicador_fora_do_quadro"
+      },
+      "V03": {
+        "detectados": 36,
+        "injetados": 36,
+        "precisao_pct": 100.0,
+        "sinalizados": 36,
+        "taxa_deteccao_pct": 100.0,
+        "tipo": "municipio_invalido"
+      },
+      "V04": {
+        "detectados": 36,
+        "injetados": 36,
+        "precisao_pct": 100.0,
+        "sinalizados": 36,
+        "taxa_deteccao_pct": 100.0,
+        "tipo": "municipio_fora_uf"
+      },
+      "V05": {
+        "detectados": 71,
+        "injetados": 71,
+        "precisao_pct": 100.0,
+        "sinalizados": 71,
+        "taxa_deteccao_pct": 100.0,
+        "tipo": "relato_duplicado"
+      },
+      "V06": {
+        "detectados": 107,
+        "injetados": 107,
+        "precisao_pct": 100.0,
+        "sinalizados": 107,
+        "taxa_deteccao_pct": 100.0,
+        "tipo": "desagregacao_inconsistente"
+      },
+      "V07": {
+        "detectados": 12,
+        "injetados": 21,
+        "precisao_pct": 85.7,
+        "sinalizados": 14,
+        "taxa_deteccao_pct": 57.1,
+        "tipo": "valor_implausivel"
+      },
+      "V08": {
+        "detectados": 67,
+        "injetados": 68,
+        "precisao_pct": 100.0,
+        "sinalizados": 67,
+        "taxa_deteccao_pct": 98.5,
+        "tipo": "acumulado_como_mensal"
+      },
+      "V09": {
+        "detectados": 249,
+        "injetados": 249,
+        "precisao_pct": 100.0,
+        "sinalizados": 249,
+        "taxa_deteccao_pct": 100.0,
+        "tipo": "fora_do_prazo"
+      }
+    },
+    "implausiveis_nao_bloqueados_com_alerta_v10": 9,
+    "indice_qualidade": {
+      "maximo": 96.0,
+      "media": 92.8,
+      "minimo": 86.4,
+      "parceiros_por_faixa": {
+        "A": 3,
+        "B": 22
+      }
+    },
+    "pct_relatos_bloqueados": 9.63,
+    "pendencias": 626,
+    "relatos_bloqueados": 350,
+    "relatos_com_alerta": 266,
+    "relatos_recebidos": 3634,
+    "relatos_validos": 3284,
+    "sinalizacoes_por_regra": {
+      "V02": 21,
+      "V03": 36,
+      "V04": 36,
+      "V05": 71,
+      "V06": 107,
+      "V07": 14,
+      "V08": 67,
+      "V09": 249,
+      "V10": 25
+    }
   }
 }
