@@ -1,0 +1,116 @@
+setor,setor_nome,indicador,indicador_nome,unidade,agregacao_tempo,uf,meta,realizado,alcance_pct
+abrigo,Abrigo,ABR-01,Pessoas atendidas com abrigo temporário (novas no mês),pessoas,soma,DF,160,171,106.9
+abrigo,Abrigo,ABR-01,Pessoas atendidas com abrigo temporário (novas no mês),pessoas,soma,MG,150,146,97.3
+abrigo,Abrigo,ABR-01,Pessoas atendidas com abrigo temporário (novas no mês),pessoas,soma,PE,85,96,112.9
+abrigo,Abrigo,ABR-01,Pessoas atendidas com abrigo temporário (novas no mês),pessoas,soma,PR,1500,1321,88.1
+abrigo,Abrigo,ABR-01,Pessoas atendidas com abrigo temporário (novas no mês),pessoas,soma,RJ,300,208,69.3
+abrigo,Abrigo,ABR-01,Pessoas atendidas com abrigo temporário (novas no mês),pessoas,soma,RR,3200,4158,129.9
+abrigo,Abrigo,ABR-01,Pessoas atendidas com abrigo temporário (novas no mês),pessoas,soma,RS,1400,873,62.4
+abrigo,Abrigo,ABR-01,Pessoas atendidas com abrigo temporário (novas no mês),pessoas,soma,SP,1200,1452,121.0
+abrigo,Abrigo,ABR-02,Pessoas abrigadas no último dia do mês,pessoas,maximo,DF,32,38,118.8
+abrigo,Abrigo,ABR-02,Pessoas abrigadas no último dia do mês,pessoas,maximo,MG,48,46,95.8
+abrigo,Abrigo,ABR-02,Pessoas abrigadas no último dia do mês,pessoas,maximo,PE,28,23,82.1
+abrigo,Abrigo,ABR-02,Pessoas abrigadas no último dia do mês,pessoas,maximo,PR,440,343,78.0
+abrigo,Abrigo,ABR-02,Pessoas abrigadas no último dia do mês,pessoas,maximo,RJ,75,59,78.7
+abrigo,Abrigo,ABR-02,Pessoas abrigadas no último dia do mês,pessoas,maximo,RR,1200,1145,95.4
+abrigo,Abrigo,ABR-02,Pessoas abrigadas no último dia do mês,pessoas,maximo,RS,230,229,99.6
+abrigo,Abrigo,ABR-02,Pessoas abrigadas no último dia do mês,pessoas,maximo,SP,330,336,101.8
+abrigo,Abrigo,ABR-03,Kits de itens não alimentares distribuídos,atividades,soma,DF,170,233,137.1
+abrigo,Abrigo,ABR-03,Kits de itens não alimentares distribuídos,atividades,soma,MG,180,177,98.3
+abrigo,Abrigo,ABR-03,Kits de itens não alimentares distribuídos,atividades,soma,PE,150,149,99.3
+abrigo,Abrigo,ABR-03,Kits de itens não alimentares distribuídos,atividades,soma,PR,1600,2051,128.2
+abrigo,Abrigo,ABR-03,Kits de itens não alimentares distribuídos,atividades,soma,RJ,610,467,76.6
+abrigo,Abrigo,ABR-03,Kits de itens não alimentares distribuídos,atividades,soma,RR,11000,7422,67.5
+abrigo,Abrigo,ABR-03,Kits de itens não alimentares distribuídos,atividades,soma,RS,1200,1143,95.2
+abrigo,Abrigo,ABR-03,Kits de itens não alimentares distribuídos,atividades,soma,SP,2700,1740,64.4
+integracao,Integração socioeconômica,INT-01,Pessoas atendidas em integração socioeconômica (novas no mês),pessoas,soma,BA,450,215,47.8
+integracao,Integração socioeconômica,INT-01,Pessoas atendidas em integração socioeconômica (novas no mês),pessoas,soma,DF,340,371,109.1
+integracao,Integração socioeconômica,INT-01,Pessoas atendidas em integração socioeconômica (novas no mês),pessoas,soma,MS,130,110,84.6
+integracao,Integração socioeconômica,INT-01,Pessoas atendidas em integração socioeconômica (novas no mês),pessoas,soma,MT,150,215,143.3
+integracao,Integração socioeconômica,INT-01,Pessoas atendidas em integração socioeconômica (novas no mês),pessoas,soma,PA,160,156,97.5
+integracao,Integração socioeconômica,INT-01,Pessoas atendidas em integração socioeconômica (novas no mês),pessoas,soma,PE,92,91,98.9
+integracao,Integração socioeconômica,INT-01,Pessoas atendidas em integração socioeconômica (novas no mês),pessoas,soma,PR,2800,2922,104.4
+integracao,Integração socioeconômica,INT-01,Pessoas atendidas em integração socioeconômica (novas no mês),pessoas,soma,RR,2100,1838,87.5
+integracao,Integração socioeconômica,INT-01,Pessoas atendidas em integração socioeconômica (novas no mês),pessoas,soma,RS,2700,1558,57.7
+integracao,Integração socioeconômica,INT-01,Pessoas atendidas em integração socioeconômica (novas no mês),pessoas,soma,SC,1900,1432,75.4
+integracao,Integração socioeconômica,INT-01,Pessoas atendidas em integração socioeconômica (novas no mês),pessoas,soma,SP,1600,1877,117.3
+integracao,Integração socioeconômica,INT-02,Pessoas inseridas no mercado de trabalho (acumulado no ano),pessoas,ultimo,BA,71,53,74.6
+integracao,Integração socioeconômica,INT-02,Pessoas inseridas no mercado de trabalho (acumulado no ano),pessoas,ultimo,DF,100,90,90.0
+integracao,Integração socioeconômica,INT-02,Pessoas inseridas no mercado de trabalho (acumulado no ano),pessoas,ultimo,MS,46,28,60.9
+integracao,Integração socioeconômica,INT-02,Pessoas inseridas no mercado de trabalho (acumulado no ano),pessoas,ultimo,MT,40,46,115.0
+integracao,Integração socioeconômica,INT-02,Pessoas inseridas no mercado de trabalho (acumulado no ano),pessoas,ultimo,PA,54,39,72.2
+integracao,Integração socioeconômica,INT-02,Pessoas inseridas no mercado de trabalho (acumulado no ano),pessoas,ultimo,PE,27,20,74.1
+integracao,Integração socioeconômica,INT-02,Pessoas inseridas no mercado de trabalho (acumulado no ano),pessoas,ultimo,PR,570,718,126.0
+integracao,Integração socioeconômica,INT-02,Pessoas inseridas no mercado de trabalho (acumulado no ano),pessoas,ultimo,RR,460,449,97.6
+integracao,Integração socioeconômica,INT-02,Pessoas inseridas no mercado de trabalho (acumulado no ano),pessoas,ultimo,RS,350,436,124.6
+integracao,Integração socioeconômica,INT-02,Pessoas inseridas no mercado de trabalho (acumulado no ano),pessoas,ultimo,SC,340,355,104.4
+integracao,Integração socioeconômica,INT-02,Pessoas inseridas no mercado de trabalho (acumulado no ano),pessoas,ultimo,SP,350,396,113.1
+protecao,Proteção,PRO-01,Pessoas atendidas em gestão de casos de proteção (novas no mês),pessoas,soma,AM,6200,4146,66.9
+protecao,Proteção,PRO-01,Pessoas atendidas em gestão de casos de proteção (novas no mês),pessoas,soma,BA,130,127,97.7
+protecao,Proteção,PRO-01,Pessoas atendidas em gestão de casos de proteção (novas no mês),pessoas,soma,DF,400,302,75.5
+protecao,Proteção,PRO-01,Pessoas atendidas em gestão de casos de proteção (novas no mês),pessoas,soma,MG,300,373,124.3
+protecao,Proteção,PRO-01,Pessoas atendidas em gestão de casos de proteção (novas no mês),pessoas,soma,MS,310,229,73.9
+protecao,Proteção,PRO-01,Pessoas atendidas em gestão de casos de proteção (novas no mês),pessoas,soma,MT,270,300,111.1
+protecao,Proteção,PRO-01,Pessoas atendidas em gestão de casos de proteção (novas no mês),pessoas,soma,PA,320,195,60.9
+protecao,Proteção,PRO-01,Pessoas atendidas em gestão de casos de proteção (novas no mês),pessoas,soma,PE,130,137,105.4
+protecao,Proteção,PRO-01,Pessoas atendidas em gestão de casos de proteção (novas no mês),pessoas,soma,PR,3100,2270,73.2
+protecao,Proteção,PRO-01,Pessoas atendidas em gestão de casos de proteção (novas no mês),pessoas,soma,RJ,800,535,66.9
+protecao,Proteção,PRO-01,Pessoas atendidas em gestão de casos de proteção (novas no mês),pessoas,soma,RR,3000,3976,132.5
+protecao,Proteção,PRO-01,Pessoas atendidas em gestão de casos de proteção (novas no mês),pessoas,soma,RS,1300,1173,90.2
+protecao,Proteção,PRO-01,Pessoas atendidas em gestão de casos de proteção (novas no mês),pessoas,soma,SC,1500,1920,128.0
+protecao,Proteção,PRO-01,Pessoas atendidas em gestão de casos de proteção (novas no mês),pessoas,soma,SP,2100,2425,115.5
+protecao,Proteção,PRO-02,Sessões de orientação jurídica e informação sobre direitos,atividades,soma,AM,3600,3401,94.5
+protecao,Proteção,PRO-02,Sessões de orientação jurídica e informação sobre direitos,atividades,soma,BA,120,133,110.8
+protecao,Proteção,PRO-02,Sessões de orientação jurídica e informação sobre direitos,atividades,soma,DF,320,357,111.6
+protecao,Proteção,PRO-02,Sessões de orientação jurídica e informação sobre direitos,atividades,soma,MG,670,478,71.3
+protecao,Proteção,PRO-02,Sessões de orientação jurídica e informação sobre direitos,atividades,soma,MS,270,229,84.8
+protecao,Proteção,PRO-02,Sessões de orientação jurídica e informação sobre direitos,atividades,soma,MT,460,358,77.8
+protecao,Proteção,PRO-02,Sessões de orientação jurídica e informação sobre direitos,atividades,soma,PA,190,154,81.1
+protecao,Proteção,PRO-02,Sessões de orientação jurídica e informação sobre direitos,atividades,soma,PE,280,177,63.2
+protecao,Proteção,PRO-02,Sessões de orientação jurídica e informação sobre direitos,atividades,soma,PR,2300,2372,103.1
+protecao,Proteção,PRO-02,Sessões de orientação jurídica e informação sobre direitos,atividades,soma,RJ,630,442,70.2
+protecao,Proteção,PRO-02,Sessões de orientação jurídica e informação sobre direitos,atividades,soma,RR,3800,3233,85.1
+protecao,Proteção,PRO-02,Sessões de orientação jurídica e informação sobre direitos,atividades,soma,RS,1600,1355,84.7
+protecao,Proteção,PRO-02,Sessões de orientação jurídica e informação sobre direitos,atividades,soma,SC,2100,2651,126.2
+protecao,Proteção,PRO-02,Sessões de orientação jurídica e informação sobre direitos,atividades,soma,SP,2700,2982,110.4
+protecao,Proteção,PRO-03,Pessoas com documentação regularizada (acumulado no ano),pessoas,ultimo,AM,2200,1565,71.1
+protecao,Proteção,PRO-03,Pessoas com documentação regularizada (acumulado no ano),pessoas,ultimo,BA,39,48,123.1
+protecao,Proteção,PRO-03,Pessoas com documentação regularizada (acumulado no ano),pessoas,ultimo,DF,100,132,132.0
+protecao,Proteção,PRO-03,Pessoas com documentação regularizada (acumulado no ano),pessoas,ultimo,MG,110,138,125.5
+protecao,Proteção,PRO-03,Pessoas com documentação regularizada (acumulado no ano),pessoas,ultimo,MS,96,99,103.1
+protecao,Proteção,PRO-03,Pessoas com documentação regularizada (acumulado no ano),pessoas,ultimo,MT,210,146,69.5
+protecao,Proteção,PRO-03,Pessoas com documentação regularizada (acumulado no ano),pessoas,ultimo,PA,99,65,65.7
+protecao,Proteção,PRO-03,Pessoas com documentação regularizada (acumulado no ano),pessoas,ultimo,PE,44,57,129.5
+protecao,Proteção,PRO-03,Pessoas com documentação regularizada (acumulado no ano),pessoas,ultimo,PR,1200,1178,98.2
+protecao,Proteção,PRO-03,Pessoas com documentação regularizada (acumulado no ano),pessoas,ultimo,RJ,280,209,74.6
+protecao,Proteção,PRO-03,Pessoas com documentação regularizada (acumulado no ano),pessoas,ultimo,RR,1300,1680,129.2
+protecao,Proteção,PRO-03,Pessoas com documentação regularizada (acumulado no ano),pessoas,ultimo,RS,480,519,108.1
+protecao,Proteção,PRO-03,Pessoas com documentação regularizada (acumulado no ano),pessoas,ultimo,SC,1000,1012,101.2
+protecao,Proteção,PRO-03,Pessoas com documentação regularizada (acumulado no ano),pessoas,ultimo,SP,1200,1042,86.8
+saude,Saúde,SAU-01,Pessoas atendidas em serviços de saúde (novas no mês),pessoas,soma,AM,2200,1990,90.5
+saude,Saúde,SAU-01,Pessoas atendidas em serviços de saúde (novas no mês),pessoas,soma,MG,320,247,77.2
+saude,Saúde,SAU-01,Pessoas atendidas em serviços de saúde (novas no mês),pessoas,soma,PE,390,224,57.4
+saude,Saúde,SAU-01,Pessoas atendidas em serviços de saúde (novas no mês),pessoas,soma,PR,2000,2312,115.6
+saude,Saúde,SAU-01,Pessoas atendidas em serviços de saúde (novas no mês),pessoas,soma,RJ,540,513,95.0
+saude,Saúde,SAU-01,Pessoas atendidas em serviços de saúde (novas no mês),pessoas,soma,RR,8100,8139,100.5
+saude,Saúde,SAU-01,Pessoas atendidas em serviços de saúde (novas no mês),pessoas,soma,RS,1700,1486,87.4
+saude,Saúde,SAU-01,Pessoas atendidas em serviços de saúde (novas no mês),pessoas,soma,SC,2000,2291,114.6
+saude,Saúde,SAU-01,Pessoas atendidas em serviços de saúde (novas no mês),pessoas,soma,SP,5700,3767,66.1
+saude,Saúde,SAU-02,Consultas e atendimentos de saúde realizados,atividades,soma,AM,8400,10870,129.4
+saude,Saúde,SAU-02,Consultas e atendimentos de saúde realizados,atividades,soma,MG,1100,673,61.2
+saude,Saúde,SAU-02,Consultas e atendimentos de saúde realizados,atividades,soma,PE,970,672,69.3
+saude,Saúde,SAU-02,Consultas e atendimentos de saúde realizados,atividades,soma,PR,6600,7843,118.8
+saude,Saúde,SAU-02,Consultas e atendimentos de saúde realizados,atividades,soma,RJ,1600,1749,109.3
+saude,Saúde,SAU-02,Consultas e atendimentos de saúde realizados,atividades,soma,RR,24000,22100,92.1
+saude,Saúde,SAU-02,Consultas e atendimentos de saúde realizados,atividades,soma,RS,4600,2625,57.1
+saude,Saúde,SAU-02,Consultas e atendimentos de saúde realizados,atividades,soma,SC,5400,6284,116.4
+saude,Saúde,SAU-02,Consultas e atendimentos de saúde realizados,atividades,soma,SP,13000,10317,79.4
+saude,Saúde,SAU-03,Unidades de saúde apoiadas,atividades,maximo,AM,4,4,100.0
+saude,Saúde,SAU-03,Unidades de saúde apoiadas,atividades,maximo,MG,4,30,750.0
+saude,Saúde,SAU-03,Unidades de saúde apoiadas,atividades,maximo,PE,3,3,100.0
+saude,Saúde,SAU-03,Unidades de saúde apoiadas,atividades,maximo,PR,20,20,100.0
+saude,Saúde,SAU-03,Unidades de saúde apoiadas,atividades,maximo,RJ,3,4,133.3
+saude,Saúde,SAU-03,Unidades de saúde apoiadas,atividades,maximo,RR,5,7,140.0
+saude,Saúde,SAU-03,Unidades de saúde apoiadas,atividades,maximo,RS,11,8,72.7
+saude,Saúde,SAU-03,Unidades de saúde apoiadas,atividades,maximo,SC,8,11,137.5
+saude,Saúde,SAU-03,Unidades de saúde apoiadas,atividades,maximo,SP,38,23,60.5

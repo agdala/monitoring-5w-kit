@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monitoramento 5W</title>
+<meta name="description" content="Relatório de monitoramento 5W com dados 100% sintéticos: qualidade dos relatos, dupla contagem e alcance das metas.">
+<style>
+:root {
+  color-scheme: light;
+  --surface-0: #f4f3f0; --surface-1: #fcfcfb; --borda: #e2e1dc;
+  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #7a7974;
+  --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a;
+  --div-neg-2: #c23b3a; --div-neg-1: #f0a09f; --div-mid: #d9d8d2; --div-pos-1: #86b6ef; --div-pos-2: #256abf;
+  --sem-meta: #f4f3f0; --trilho: #ecebe7; --aviso-fundo: #fff6e0; --aviso-borda: #eda100; --contorno: #c9c8c2;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --surface-0: #121211; --surface-1: #1a1a19; --borda: #383835;
+    --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #91908a;
+    --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70;
+    --div-neg-2: #e66767; --div-neg-1: #8a4141; --div-mid: #4a4a46; --div-pos-1: #2f5f9c; --div-pos-2: #6da7ec;
+    --sem-meta: #222220; --trilho: #2a2a28; --aviso-fundo: #2b2410; --aviso-borda: #c98500; --contorno: #55554f;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-0: #121211; --surface-1: #1a1a19; --borda: #383835;
+  --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #91908a;
+  --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70;
+  --div-neg-2: #e66767; --div-neg-1: #8a4141; --div-mid: #4a4a46; --div-pos-1: #2f5f9c; --div-pos-2: #6da7ec;
+  --sem-meta: #222220; --trilho: #2a2a28; --aviso-fundo: #2b2410; --aviso-borda: #c98500; --contorno: #55554f;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--surface-0); color: var(--text-primary);
+       font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1040px; margin: 0 auto; padding: 24px 16px 64px; }
+header h1 { font-size: 1.7rem; margin: 0 0 4px; }
+header p { margin: 0; color: var(--text-secondary); }
+.aviso { background: var(--aviso-fundo); border-left: 4px solid var(--aviso-borda); padding: 10px 14px;
+         border-radius: 6px; margin: 16px 0; }
+section { background: var(--surface-1); border: 1px solid var(--borda); border-radius: 10px; padding: 20px;
+          margin-top: 20px; }
+h2 { font-size: 1.2rem; margin: 0 0 4px; }
+.sub { color: var(--text-secondary); margin: 0 0 14px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 14px 0; }
+.kpi { border: 1px solid var(--borda); border-radius: 8px; padding: 12px; }
+.kpi .r { color: var(--text-secondary); font-size: .85rem; }
+.kpi .v { font-size: 1.6rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+.kpi .d { color: var(--text-muted); font-size: .8rem; }
+.grafico { width: 100%; height: auto; display: block; }
+.mapa { max-width: 760px; }
+.grafico text { fill: var(--text-secondary); font-size: 11px; }
+.grafico .t-rotulo { fill: var(--text-primary); }
+.grafico .t-grupo { fill: var(--text-primary); font-weight: 650; font-size: 12px; }
+.grafico .t-valor { fill: var(--text-primary); font-variant-numeric: tabular-nums; }
+.grafico .t-eixo { fill: var(--text-muted); }
+.grafico .t-mapa { fill: var(--text-primary); font-size: 10px; font-weight: 600; pointer-events: none;
+                   paint-order: stroke; stroke: var(--surface-1); stroke-width: 3px; }
+.grafico .ref { stroke: var(--text-muted); stroke-dasharray: 3 3; }
+.grafico .barra, .barra { fill: var(--series-1); }
+.trilho { fill: var(--trilho); }
+.grafico .alvo { fill: transparent; }
+.grafico .marca:hover .alvo { fill: var(--trilho); }
+.grafico .uf { stroke: var(--contorno); stroke-width: 0.8; }
+.grafico .uf:hover { stroke: var(--text-primary); stroke-width: 1.5; }
+.legenda { display: flex; gap: 16px; flex-wrap: wrap; margin: 6px 0 10px; color: var(--text-secondary); font-size: .88rem; }
+.legenda i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.tabela { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .88rem; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--borda); vertical-align: top; }
+th { color: var(--text-secondary); font-weight: 600; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+details { margin-top: 12px; }
+summary { cursor: pointer; color: var(--text-secondary); }
+.selo { display: inline-block; padding: 0 7px; border-radius: 10px; border: 1px solid var(--borda); font-size: .8rem; }
+ul.achados li { margin-bottom: 6px; }
+a { color: var(--series-1); }
+footer { color: var(--text-muted); font-size: .85rem; margin-top: 24px; }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>Monitoramento 5W da resposta</h1>
+  <p>Quem faz o quê, onde, quando e para quem · 2025 · 25 parceiros em 14 UFs e 23 municípios</p>
+</header>
+<div class="aviso"><strong>Dados 100% sintéticos.</strong> Parceiros, pessoas, metas e relatos foram gerados por código
+com semente fixa. Nenhum número representa uma operação real. Código e método em <a href="https://github.com/agdala/monitoring-5w-kit">https://github.com/agdala/monitoring-5w-kit</a>.</div>
+
+<section id="resumo">
+  <h2>1. Resumo executivo</h2>
+  <div class="kpis">
+  
+    <div class="kpi"><div class="r">Relatos recebidos</div><div class="v">3.634</div><div class="d">25 parceiros, 12 meses</div></div>
+  
+    <div class="kpi"><div class="r">Bloqueados por erro</div><div class="v">9,7%</div><div class="d">354 relatos</div></div>
+  
+    <div class="kpi"><div class="r">Erros injetados detectados</div><div class="v">99,0%</div><div class="d">609 erros</div></div>
+  
+    <div class="kpi"><div class="r">Pessoas únicas estimadas</div><div class="v">58.287</div><div class="d">gabarito: 57.510 (+1,4%)</div></div>
+  
+    <div class="kpi"><div class="r">Metas atingidas</div><div class="v">50 de 115</div><div class="d">indicador x UF</div></div>
+  
+  </div>
+  <ul class="achados"><li>354 de 3.634 relatos (9,7%) foram bloqueados por erro e voltam ao parceiro com mensagem de correção; 262 seguem na consolidação com alerta.</li><li>As regras detectaram 99,0% dos erros injetados. A mais fraca é a V07 (valor implausível): 76,2%, porque um zero a mais em série pequena se confunde com variação real.</li><li>Somar os parceiros superestima as pessoas únicas em 16,5% (relatos sem erros); o máximo por município subestima em 20,3%. O método de menor erro foi: união sob independência (com pin).</li><li>50 de 115 metas (indicador x UF) foram atingidas; 19 estão abaixo de 70%.</li></ul>
+</section>
+
+<section id="metas">
+  <h2>2. Alcance das metas por setor</h2>
+  <p class="sub">Realizado no ano dividido pela meta, somando as UFs com meta. Cada indicador é agregado no tempo pela sua regra
+  (soma, pico do mês consolidado ou último valor). Pessoas atendidas usam o método oficial: união sob independência (com pin).</p>
+  <svg viewBox="0 0 640 390" role="img" class="grafico" aria-label="Alcance das metas por indicador"><line x1="470.0" y1="18" x2="470.0" y2="384" class="ref"/><text x="470.0" y="14" text-anchor="middle" class="t-eixo">meta = 100%</text><text x="0" y="40" class="t-grupo">Proteção</text><g class="marca"><title>PRO-01 Pessoas atendidas em gestão de casos de proteção (novas no mês): 18.108 de 19.860 (91,2%)</title><rect x="246" y="43.0" width="390" height="24" class="alvo"/><text x="12" y="59" class="t-rotulo">PRO-01 Pessoas atendidas em gestão de…</text><path d="M250,48 h196.64 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 h-196.64 z" class="barra"/><text x="456.64" y="59" class="t-valor">91,2%</text></g><g class="marca"><title>PRO-02 Sessões de orientação jurídica e informação sobre direitos: 18.322 de 19.040 (96,2%)</title><rect x="246" y="67.0" width="390" height="24" class="alvo"/><text x="12" y="83" class="t-rotulo">PRO-02 Sessões de orientação jurídica…</text><path d="M250,72 h207.64 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 h-207.64 z" class="barra"/><text x="467.64" y="83" class="t-valor">96,2%</text></g><g class="marca"><title>PRO-03 Pessoas com documentação regularizada (acumulado no ano): 7.890 de 8.358 (94,4%)</title><rect x="246" y="91.0" width="390" height="24" class="alvo"/><text x="12" y="107" class="t-rotulo">PRO-03 Pessoas com documentação regul…</text><path d="M250,96 h203.68000000000006 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 h-203.68000000000006 z" class="barra"/><text x="463.68000000000006" y="107" class="t-valor">94,4%</text></g><text x="0" y="136" class="t-grupo">Abrigo</text><g class="marca"><title>ABR-01 Pessoas atendidas com abrigo temporário (novas no mês): 8.425 de 7.995 (105,4%)</title><rect x="246" y="139.0" width="390" height="24" class="alvo"/><text x="12" y="155" class="t-rotulo">ABR-01 Pessoas atendidas com abrigo t…</text><path d="M250,144 h227.88 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 h-227.88 z" class="barra"/><text x="487.88" y="155" class="t-valor">105,4%</text></g><g class="marca"><title>ABR-02 Pessoas abrigadas no último dia do mês: 2.219 de 2.383 (93,1%)</title><rect x="246" y="163.0" width="390" height="24" class="alvo"/><text x="12" y="179" class="t-rotulo">ABR-02 Pessoas abrigadas no último di…</text><path d="M250,168 h200.81999999999994 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 h-200.81999999999994 z" class="barra"/><text x="460.81999999999994" y="179" class="t-valor">93,1%</text></g><g class="marca"><title>ABR-03 Kits de itens não alimentares distribuídos: 13.382 de 17.610 (76,0%)</title><rect x="246" y="187.0" width="390" height="24" class="alvo"/><text x="12" y="203" class="t-rotulo">ABR-03 Kits de itens não alimentares …</text><path d="M250,192 h163.2 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 h-163.2 z" class="barra"/><text x="423.2" y="203" class="t-valor">76,0%</text></g><text x="0" y="232" class="t-grupo">Integração socioeconômica</text><g class="marca"><title>INT-01 Pessoas atendidas em integração socioeconômica (novas no mês): 10.785 de 12.422 (86,8%)</title><rect x="246" y="235.0" width="390" height="24" class="alvo"/><text x="12" y="251" class="t-rotulo">INT-01 Pessoas atendidas em integraçã…</text><path d="M250,240 h186.96000000000004 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 h-186.96000000000004 z" class="barra"/><text x="446.96000000000004" y="251" class="t-valor">86,8%</text></g><g class="marca"><title>INT-02 Pessoas inseridas no mercado de trabalho (acumulado no ano): 2.630 de 2.408 (109,2%)</title><rect x="246" y="259.0" width="390" height="24" class="alvo"/><text x="12" y="275" class="t-rotulo">INT-02 Pessoas inseridas no mercado d…</text><path d="M250,264 h236.24 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 h-236.24 z" class="barra"/><text x="496.24" y="275" class="t-valor">109,2%</text></g><text x="0" y="304" class="t-grupo">Saúde</text><g class="marca"><title>SAU-01 Pessoas atendidas em serviços de saúde (novas no mês): 20.969 de 22.950 (91,4%)</title><rect x="246" y="307.0" width="390" height="24" class="alvo"/><text x="12" y="323" class="t-rotulo">SAU-01 Pessoas atendidas em serviços …</text><path d="M250,312 h197.08000000000004 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 h-197.08000000000004 z" class="barra"/><text x="457.08000000000004" y="323" class="t-valor">91,4%</text></g><g class="marca"><title>SAU-02 Consultas e atendimentos de saúde realizados: 63.133 de 65.670 (96,1%)</title><rect x="246" y="331.0" width="390" height="24" class="alvo"/><text x="12" y="347" class="t-rotulo">SAU-02 Consultas e atendimentos de sa…</text><path d="M250,336 h207.41999999999996 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 h-207.41999999999996 z" class="barra"/><text x="467.41999999999996" y="347" class="t-valor">96,1%</text></g><g class="marca"><title>SAU-03 Unidades de saúde apoiadas: 110 de 96 (114,6%)</title><rect x="246" y="355.0" width="390" height="24" class="alvo"/><text x="12" y="371" class="t-rotulo">SAU-03 Unidades de saúde apoiadas</text><path d="M250,360 h248.12 a4,4 0 0 1 4,4 v6 a4,4 0 0 1 -4,4 h-248.12 z" class="barra"/><text x="508.12" y="371" class="t-valor">114,6%</text></g></svg>
+  <details><summary>Tabela: meta e realizado por indicador</summary><div class="tabela"><table>
+    <tr><th>Setor</th><th>Indicador</th><th>Unidade</th><th class="n">Meta</th><th class="n">Realizado</th><th class="n">Alcance</th></tr>
+    <tr><td>Proteção</td><td>PRO-01 Pessoas atendidas em gestão de casos de proteção (novas no mês)</td><td>pessoas</td>
+    <td class="n">19.860</td><td class="n">18.108</td><td class="n">91,2%</td></tr><tr><td>Proteção</td><td>PRO-02 Sessões de orientação jurídica e informação sobre direitos</td><td>atividades</td>
+    <td class="n">19.040</td><td class="n">18.322</td><td class="n">96,2%</td></tr><tr><td>Proteção</td><td>PRO-03 Pessoas com documentação regularizada (acumulado no ano)</td><td>pessoas</td>
+    <td class="n">8.358</td><td class="n">7.890</td><td class="n">94,4%</td></tr><tr><td>Abrigo</td><td>ABR-01 Pessoas atendidas com abrigo temporário (novas no mês)</td><td>pessoas</td>
+    <td class="n">7.995</td><td class="n">8.425</td><td class="n">105,4%</td></tr><tr><td>Abrigo</td><td>ABR-02 Pessoas abrigadas no último dia do mês</td><td>pessoas</td>
+    <td class="n">2.383</td><td class="n">2.219</td><td class="n">93,1%</td></tr><tr><td>Abrigo</td><td>ABR-03 Kits de itens não alimentares distribuídos</td><td>atividades</td>
+    <td class="n">17.610</td><td class="n">13.382</td><td class="n">76,0%</td></tr><tr><td>Integração socioeconômica</td><td>INT-01 Pessoas atendidas em integração socioeconômica (novas no mês)</td><td>pessoas</td>
+    <td class="n">12.422</td><td class="n">10.785</td><td class="n">86,8%</td></tr><tr><td>Integração socioeconômica</td><td>INT-02 Pessoas inseridas no mercado de trabalho (acumulado no ano)</td><td>pessoas</td>
+    <td class="n">2.408</td><td class="n">2.630</td><td class="n">109,2%</td></tr><tr><td>Saúde</td><td>SAU-01 Pessoas atendidas em serviços de saúde (novas no mês)</td><td>pessoas</td>
+    <td class="n">22.950</td><td class="n">20.969</td><td class="n">91,4%</td></tr><tr><td>Saúde</td><td>SAU-02 Consultas e atendimentos de saúde realizados</td><td>atividades</td>
+    <td class="n">65.670</td><td class="n">63.133</td><td class="n">96,1%</td></tr><tr><td>Saúde</td><td>SAU-03 Unidades de saúde apoiadas</td><td>atividades</td>
+    <td class="n">96</td><td class="n">110</td><td class="n">114,6%</td></tr>
+  </table></div></details>
+  <details><summary>Metas abaixo de 70% (indicador x UF): 19</summary><div class="tabela"><table>
+    <tr><th>Indicador</th><th>UF</th><th class="n">Meta</th><th class="n">Realizado</th><th class="n">Alcance</th></tr>
+    <tr><td>INT-01 Pessoas atendidas em integração socioeconômica (novas no mês)</td><td>BA</td><td class="n">450</td>
+    <td class="n">215</td><td class="n">47,8%</td></tr><tr><td>SAU-02 Consultas e atendimentos de saúde realizados</td><td>RS</td><td class="n">4.600</td>
+    <td class="n">2.625</td><td class="n">57,1%</td></tr><tr><td>SAU-01 Pessoas atendidas em serviços de saúde (novas no mês)</td><td>PE</td><td class="n">390</td>
+    <td class="n">224</td><td class="n">57,4%</td></tr><tr><td>INT-01 Pessoas atendidas em integração socioeconômica (novas no mês)</td><td>RS</td><td class="n">2.700</td>
+    <td class="n">1.558</td><td class="n">57,7%</td></tr><tr><td>SAU-03 Unidades de saúde apoiadas</td><td>SP</td><td class="n">38</td>
+    <td class="n">23</td><td class="n">60,5%</td></tr><tr><td>INT-02 Pessoas inseridas no mercado de trabalho (acumulado no ano)</td><td>MS</td><td class="n">46</td>
+    <td class="n">28</td><td class="n">60,9%</td></tr><tr><td>PRO-01 Pessoas atendidas em gestão de casos de proteção (novas no mês)</td><td>PA</td><td class="n">320</td>
+    <td class="n">195</td><td class="n">60,9%</td></tr><tr><td>SAU-02 Consultas e atendimentos de saúde realizados</td><td>MG</td><td class="n">1.100</td>
+    <td class="n">673</td><td class="n">61,2%</td></tr><tr><td>ABR-01 Pessoas atendidas com abrigo temporário (novas no mês)</td><td>RS</td><td class="n">1.400</td>
+    <td class="n">873</td><td class="n">62,4%</td></tr><tr><td>PRO-02 Sessões de orientação jurídica e informação sobre direitos</td><td>PE</td><td class="n">280</td>
+    <td class="n">177</td><td class="n">63,2%</td></tr><tr><td>ABR-03 Kits de itens não alimentares distribuídos</td><td>SP</td><td class="n">2.700</td>
+    <td class="n">1.740</td><td class="n">64,4%</td></tr><tr><td>PRO-03 Pessoas com documentação regularizada (acumulado no ano)</td><td>PA</td><td class="n">99</td>
+    <td class="n">65</td><td class="n">65,7%</td></tr><tr><td>SAU-01 Pessoas atendidas em serviços de saúde (novas no mês)</td><td>SP</td><td class="n">5.700</td>
+    <td class="n">3.767</td><td class="n">66,1%</td></tr><tr><td>PRO-01 Pessoas atendidas em gestão de casos de proteção (novas no mês)</td><td>AM</td><td class="n">6.200</td>
+    <td class="n">4.146</td><td class="n">66,9%</td></tr><tr><td>PRO-01 Pessoas atendidas em gestão de casos de proteção (novas no mês)</td><td>RJ</td><td class="n">800</td>
+    <td class="n">535</td><td class="n">66,9%</td></tr><tr><td>ABR-03 Kits de itens não alimentares distribuídos</td><td>RR</td><td class="n">11.000</td>
+    <td class="n">7.422</td><td class="n">67,5%</td></tr><tr><td>SAU-02 Consultas e atendimentos de saúde realizados</td><td>PE</td><td class="n">970</td>
+    <td class="n">672</td><td class="n">69,3%</td></tr><tr><td>ABR-01 Pessoas atendidas com abrigo temporário (novas no mês)</td><td>RJ</td><td class="n">300</td>
+    <td class="n">208</td><td class="n">69,3%</td></tr><tr><td>PRO-03 Pessoas com documentação regularizada (acumulado no ano)</td><td>MT</td><td class="n">210</td>
+    <td class="n">146</td><td class="n">69,5%</td></tr>
+  </table></div></details>
+</section>
+
+<section id="mapa">
+  <h2>3. Alcance da meta de pessoas atendidas por UF</h2>
+  <p class="sub">Soma dos indicadores de pessoas atendidas dos quatro setores (realizado sobre meta). Escala divergente:
+  cinza é a faixa da meta (90% a 110%), vermelho abaixo e azul acima. Malha simplificada das UFs a partir da malha municipal do IBGE.</p>
+  <svg viewBox="0 0 700 603" role="img" class="grafico mapa" aria-label="Mapa do Brasil por UF com o percentual de alcance da meta de pessoas atendidas"><path d="M159.1,267.2 L153.8,261.4 L150.9,262.2 L145.9,259.0 L142.6,260.3 L136.5,259.1 L135.0,255.8 L127.7,252.7 L126.9,248.5 L124.5,248.7 L123.1,240.5 L124.7,238.0 L122.2,230.9 L124.1,221.8 L122.7,219.5 L120.4,221.7 L117.4,220.2 L108.2,222.5 L103.4,220.5 L107.3,218.7 L108.5,215.5 L114.6,215.5 L117.2,218.1 L119.8,215.5 L122.2,216.4 L121.9,214.2 L124.7,213.3 L126.8,215.8 L130.4,209.5 L140.0,209.0 L140.1,205.9 L143.2,203.4 L142.9,200.0 L145.2,200.0 L147.4,194.8 L158.2,195.1 L170.2,207.9 L175.1,205.6 L177.3,208.5 L176.6,213.1 L175.1,213.5 L177.2,218.7 L175.5,226.3 L177.5,230.0 L176.2,238.2 L191.4,238.2 L192.9,239.9 L198.1,240.0 L198.9,244.1 L196.3,246.8 L196.3,250.4 L201.0,257.6 L196.8,261.6 L196.7,265.3 L193.9,268.2 L192.4,273.5 L187.9,276.9 L183.7,274.1 L172.2,274.9 L167.6,268.6 L159.1,267.2 Z" style="fill:var(--sem-meta)" class="uf"><title>RO: sem meta (sem parceiros no quadro)</title></path><path d="M78.8,239.9 L59.5,237.2 L54.2,239.3 L51.1,237.3 L49.9,238.3 L49.9,221.4 L51.5,215.6 L41.7,223.5 L27.9,224.0 L28.6,221.1 L26.9,220.4 L26.7,217.4 L13.8,215.5 L17.6,209.5 L12.4,202.0 L9.2,200.3 L6.0,193.8 L7.2,192.1 L3.1,189.1 L3.2,185.9 L7.0,185.2 L5.6,182.5 L22.6,188.8 L57.8,193.1 L77.3,210.3 L105.6,222.4 L100.0,227.7 L92.2,231.1 L90.4,234.2 L86.0,233.3 L83.0,237.7 L78.8,239.9 Z" style="fill:var(--sem-meta)" class="uf"><title>AC: sem meta (sem parceiros no quadro)</title></path><path d="M102.9,221.4 L77.3,210.3 L57.8,193.1 L22.6,188.8 L5.6,182.5 L7.8,177.5 L14.8,173.7 L13.4,167.0 L17.3,161.5 L19.4,153.8 L32.3,145.3 L45.4,143.4 L49.5,139.7 L53.9,140.0 L55.7,143.1 L59.1,142.1 L66.9,96.6 L63.7,91.2 L63.9,87.7 L57.7,83.1 L58.0,72.4 L65.8,69.8 L67.4,71.6 L70.9,71.1 L68.8,65.2 L60.7,64.7 L60.7,55.7 L84.1,55.6 L82.6,54.1 L83.9,52.0 L87.2,54.1 L94.9,48.2 L96.3,53.3 L98.9,55.6 L99.0,63.6 L102.2,62.7 L109.8,69.8 L119.9,65.9 L120.6,71.1 L123.6,67.0 L125.7,67.2 L126.8,63.7 L130.8,61.6 L131.6,62.7 L136.5,58.4 L137.4,60.9 L140.8,57.1 L142.5,51.8 L146.7,51.4 L150.9,48.7 L159.9,52.4 L158.8,57.6 L163.4,64.7 L162.6,73.1 L167.3,85.1 L165.8,89.7 L162.8,91.3 L169.7,96.8 L171.3,100.5 L178.0,103.7 L178.6,107.5 L177.1,108.5 L175.0,106.5 L155.5,116.0 L150.6,116.1 L147.9,114.3 L142.6,115.4 L142.4,117.3 L145.0,117.2 L146.3,121.2 L151.8,119.2 L153.4,121.2 L157.0,121.3 L157.0,123.6 L161.9,125.0 L164.0,120.9 L172.6,117.9 L174.4,121.5 L178.3,119.6 L184.2,121.9 L187.2,120.9 L188.5,110.1 L193.9,108.0 L201.3,112.1 L202.3,109.8 L207.8,116.0 L210.6,113.1 L208.3,106.7 L209.9,103.2 L209.1,101.2 L204.5,100.9 L206.7,98.5 L206.4,96.3 L201.9,96.2 L197.5,91.7 L197.3,88.9 L200.5,84.0 L198.9,80.0 L194.6,82.0 L197.3,76.7 L213.3,76.7 L213.6,85.3 L221.2,96.8 L223.4,98.1 L225.4,96.3 L226.2,100.5 L234.2,105.1 L237.4,105.1 L239.0,107.8 L243.4,109.4 L244.1,112.1 L252.1,109.5 L247.0,115.1 L222.2,173.0 L219.0,176.6 L223.7,186.1 L220.4,193.0 L221.6,197.1 L219.8,206.6 L175.8,206.7 L174.0,205.2 L170.2,207.9 L158.2,195.1 L147.4,194.8 L145.2,200.0 L142.9,200.0 L143.2,203.4 L140.1,205.9 L140.1,208.9 L130.4,209.5 L126.2,216.1 L124.7,213.3 L121.9,214.2 L122.2,216.4 L119.8,215.5 L117.2,218.1 L114.6,215.5 L108.5,215.5 L107.3,218.7 L102.9,221.4 Z" style="fill:var(--div-neg-1)" class="uf"><title>AM: 73,0% da meta de pessoas atendidas</title></path><path d="M197.1,77.1 L192.2,87.7 L193.5,90.7 L188.5,93.2 L185.0,88.4 L180.8,87.6 L177.5,89.9 L175.8,93.9 L175.2,100.4 L177.3,103.1 L171.3,100.5 L169.7,96.8 L162.8,91.3 L165.8,89.7 L167.3,85.1 L162.6,73.1 L163.4,64.7 L158.8,57.6 L160.2,52.5 L151.0,48.8 L150.3,45.4 L145.6,46.1 L141.3,44.5 L142.2,40.6 L138.9,35.7 L139.4,29.3 L130.7,19.2 L134.3,21.5 L139.9,21.1 L142.6,24.8 L146.5,24.3 L146.5,22.7 L149.1,25.3 L150.0,23.3 L153.2,23.7 L152.8,25.3 L156.6,28.6 L158.2,26.7 L159.6,27.7 L159.5,22.5 L162.1,22.7 L163.5,20.4 L170.9,21.5 L176.1,19.4 L179.4,15.2 L184.0,15.5 L189.6,9.6 L187.8,5.5 L196.0,5.0 L198.0,9.0 L195.6,15.6 L202.4,17.7 L201.7,20.4 L204.5,23.8 L199.6,29.0 L200.6,32.2 L198.0,39.1 L199.2,46.5 L201.7,47.7 L201.3,53.7 L208.3,60.4 L213.3,62.3 L213.3,76.7 L197.1,77.1 Z" style="fill:var(--div-pos-1)" class="uf"><title>RR: 110,4% da meta de pessoas atendidas</title></path><path d="M334.0,221.5 L243.1,215.5 L236.8,208.5 L231.4,206.2 L230.7,198.3 L219.0,176.6 L222.2,173.0 L247.0,115.1 L252.1,109.7 L242.9,111.6 L243.1,109.3 L239.0,107.8 L237.4,105.1 L229.7,103.1 L226.2,100.5 L225.4,96.3 L223.4,98.1 L221.2,96.8 L215.9,90.2 L215.6,86.7 L213.6,85.3 L213.3,62.7 L218.7,62.2 L218.6,59.4 L221.2,57.4 L225.7,58.9 L225.8,56.6 L231.9,56.1 L234.7,52.0 L238.1,51.3 L242.4,53.8 L247.3,52.3 L253.8,54.0 L254.9,51.1 L251.6,47.8 L253.8,44.1 L262.2,45.7 L268.2,43.4 L270.8,48.8 L271.1,54.8 L277.1,55.4 L280.1,59.0 L289.3,62.6 L289.6,67.0 L293.8,70.6 L294.1,77.5 L296.3,82.4 L299.6,84.7 L300.3,88.7 L302.0,88.9 L301.7,92.6 L303.4,92.6 L304.7,96.5 L308.3,98.2 L309.4,96.5 L312.3,96.8 L313.9,91.3 L320.1,82.1 L327.6,77.8 L331.4,71.5 L335.9,70.3 L336.3,75.5 L341.6,75.1 L345.5,80.1 L352.0,83.7 L359.3,84.1 L358.4,87.6 L365.0,89.9 L366.9,94.0 L368.9,88.2 L370.1,90.4 L370.8,88.7 L376.0,89.6 L376.5,91.6 L377.7,89.9 L379.2,96.0 L378.2,97.1 L376.3,100.5 L379.7,99.1 L381.8,103.7 L381.1,107.7 L384.3,112.6 L385.2,103.7 L389.8,106.5 L388.9,111.4 L386.3,114.4 L387.0,116.7 L383.6,119.0 L384.8,121.2 L378.3,131.5 L377.7,135.8 L370.4,145.9 L354.5,157.2 L359.7,157.9 L363.0,160.8 L360.9,162.9 L361.8,165.8 L359.0,169.1 L359.7,172.0 L356.5,173.0 L355.8,176.0 L348.1,179.9 L348.5,184.2 L345.8,188.8 L349.0,192.5 L348.1,197.8 L342.8,207.3 L336.6,213.8 L334.0,221.5 Z M391.6,95.8 L392.0,96.0 L391.9,96.2 L391.6,95.8 Z M386.7,94.9 L386.7,94.8 L386.8,94.8 L386.7,94.9 Z M384.3,92.7 L384.5,92.6 L384.5,92.7 L384.3,92.7 Z M379.9,91.7 L379.7,91.9 L379.6,91.7 L379.9,91.7 Z M378.3,90.7 L378.3,90.7 L378.5,90.7 L378.3,90.7 Z M367.3,89.9 L367.2,89.9 L367.3,89.7 L367.3,89.9 Z" style="fill:var(--div-neg-1)" class="uf"><title>PA: 73,1% da meta de pessoas atendidas</title></path><path d="M319.4,83.3 L313.9,91.3 L312.3,96.8 L309.4,96.5 L308.3,98.2 L303.3,95.5 L302.0,88.9 L299.9,88.2 L299.6,84.7 L296.3,82.4 L293.0,75.1 L293.8,70.6 L289.6,67.0 L289.3,62.6 L280.1,59.0 L277.1,55.4 L271.1,54.8 L269.1,45.5 L271.1,44.9 L272.2,46.9 L278.7,49.1 L284.6,46.2 L287.7,48.0 L290.6,46.7 L291.4,49.0 L296.6,49.0 L301.6,44.2 L304.7,34.9 L314.1,22.4 L316.1,16.7 L322.1,24.6 L322.6,35.3 L327.4,49.7 L331.0,49.0 L333.8,54.6 L338.4,56.0 L338.8,59.2 L335.9,70.3 L331.4,71.5 L328.8,76.8 L319.4,83.3 Z" style="fill:var(--sem-meta)" class="uf"><title>AP: sem meta (sem parceiros no quadro)</title></path><path d="M352.9,264.5 L351.3,266.5 L349.4,264.0 L347.7,265.3 L345.9,270.9 L333.1,264.7 L335.2,258.4 L332.0,260.6 L330.0,265.0 L328.5,264.5 L326.8,244.9 L328.8,233.4 L336.4,214.1 L342.8,207.3 L348.1,197.8 L349.0,192.5 L345.8,188.8 L348.5,184.2 L348.1,179.9 L355.5,176.3 L357.9,171.7 L359.7,172.0 L359.0,169.1 L361.8,165.5 L360.9,162.9 L363.2,161.1 L359.7,157.9 L354.4,157.2 L360.0,154.6 L366.5,155.9 L372.2,160.2 L373.6,170.4 L371.5,180.5 L368.5,183.6 L372.2,185.5 L370.7,187.2 L378.3,196.0 L384.3,193.8 L386.1,195.4 L385.7,199.1 L381.6,201.0 L377.9,210.5 L380.0,210.6 L382.2,215.5 L385.0,216.5 L383.8,220.1 L387.7,226.4 L395.8,227.8 L396.7,226.1 L397.0,227.7 L389.9,233.3 L384.2,242.5 L386.1,245.8 L391.6,247.2 L388.5,247.4 L387.7,250.8 L390.5,251.2 L387.3,253.3 L388.0,257.6 L390.7,259.6 L388.9,261.0 L388.7,266.3 L391.2,266.0 L387.8,266.9 L387.0,264.5 L386.6,266.6 L382.4,266.6 L372.9,271.2 L370.1,268.5 L369.4,273.8 L367.5,271.5 L362.7,271.5 L362.9,269.2 L358.8,271.2 L357.9,268.9 L356.8,271.6 L356.6,267.9 L352.9,264.5 Z" style="fill:var(--sem-meta)" class="uf"><title>TO: sem meta (sem parceiros no quadro)</title></path><path d="M393.4,207.0 L395.9,216.5 L392.8,227.7 L387.7,226.4 L383.8,220.1 L385.0,216.5 L382.2,215.5 L380.0,210.6 L377.9,210.5 L381.6,201.0 L385.7,199.1 L386.0,195.0 L383.6,193.8 L378.3,196.0 L370.7,187.2 L371.9,185.1 L368.5,183.6 L371.5,180.5 L373.6,170.4 L371.9,159.8 L366.5,155.9 L360.0,154.6 L354.5,157.2 L370.4,145.9 L377.7,135.8 L378.3,131.5 L384.8,121.2 L383.6,119.0 L387.0,116.7 L386.8,112.6 L388.9,111.4 L389.9,106.7 L388.5,105.2 L390.6,103.7 L392.0,105.4 L392.6,102.2 L395.3,103.5 L394.5,106.1 L397.9,112.0 L403.7,107.7 L402.4,103.4 L404.1,102.1 L405.1,103.9 L408.6,103.4 L409.4,104.7 L407.2,106.7 L407.9,108.3 L410.9,108.0 L409.6,112.3 L411.8,113.0 L410.8,118.3 L420.4,114.9 L419.0,115.9 L421.0,115.9 L421.0,117.3 L426.1,112.3 L427.8,114.4 L432.1,114.4 L441.9,119.3 L451.1,119.4 L451.3,123.0 L449.4,126.2 L445.8,129.8 L441.6,130.1 L434.8,141.1 L436.7,144.7 L435.3,149.2 L437.4,154.8 L433.2,161.2 L433.7,167.3 L437.0,171.4 L435.7,176.2 L428.8,178.6 L424.7,176.6 L420.3,177.5 L411.1,186.5 L401.3,189.7 L396.0,204.0 L393.4,207.0 Z M405.0,101.8 L405.0,101.8 L405.0,101.8 L405.0,101.8 Z M402.6,100.8 L402.6,100.8 L402.6,100.8 L402.6,100.8 Z M399.5,100.5 L399.7,100.5 L399.5,100.5 L399.5,100.5 Z M397.9,99.9 L397.7,99.9 L397.7,99.9 L397.9,99.9 Z M395.5,98.5 L395.5,98.5 L395.3,98.5 L395.5,98.5 Z M393.4,96.2 L393.5,96.2 L393.5,96.3 L393.4,96.2 Z M411.9,107.0 L412.3,107.0 L411.9,107.1 L411.9,107.0 Z M412.1,106.2 L412.1,106.5 L411.9,106.1 L412.1,106.2 Z M414.3,111.0 L414.4,111.0 L414.3,111.0 L414.3,111.0 Z M414.0,110.1 L414.6,110.0 L414.4,110.1 L414.0,110.1 Z M412.8,108.0 L412.8,108.0 L412.8,108.0 L412.8,108.0 Z" style="fill:var(--sem-meta)" class="uf"><title>MA: sem meta (sem parceiros no quadro)</title></path><path d="M407.2,236.7 L401.8,234.4 L398.7,225.7 L395.8,227.8 L393.5,227.1 L395.9,216.5 L393.0,208.6 L396.0,204.0 L400.1,191.2 L411.1,186.5 L420.0,177.6 L424.7,176.6 L428.4,178.7 L435.3,176.6 L437.0,171.4 L433.7,167.3 L433.2,161.2 L437.4,154.8 L435.3,149.2 L436.7,144.7 L434.9,140.8 L441.6,130.1 L445.8,129.8 L449.4,126.2 L451.2,119.7 L458.0,122.3 L458.9,124.8 L456.6,128.8 L459.1,133.7 L458.9,138.3 L461.0,138.4 L461.2,140.3 L459.0,150.3 L463.6,154.8 L463.7,167.1 L466.2,175.9 L471.3,178.0 L468.8,186.5 L466.5,187.8 L467.1,191.8 L468.9,193.0 L468.2,197.3 L457.2,205.4 L450.8,213.1 L444.2,214.2 L438.0,218.5 L434.8,215.4 L426.7,214.2 L422.8,217.5 L425.4,224.0 L421.8,230.1 L420.4,229.9 L418.9,233.0 L416.0,231.9 L407.2,236.7 Z" style="fill:var(--sem-meta)" class="uf"><title>PI: sem meta (sem parceiros no quadro)</title></path><path d="M489.1,193.2 L480.0,185.6 L469.2,185.5 L471.3,178.0 L466.2,175.9 L463.7,167.1 L463.6,154.8 L459.0,150.3 L461.2,140.3 L461.0,138.4 L458.9,138.3 L459.1,133.7 L456.6,128.8 L458.9,121.7 L469.5,120.3 L478.0,121.7 L497.6,133.5 L504.1,141.4 L514.7,149.7 L509.3,151.2 L502.0,165.8 L496.2,170.6 L495.8,177.7 L493.7,179.6 L496.9,185.1 L495.2,189.1 L489.1,193.2 Z" style="fill:var(--sem-meta)" class="uf"><title>CE: sem meta (sem parceiros no quadro)</title></path><path d="M502.6,174.0 L496.2,171.6 L496.9,169.3 L502.0,165.8 L509.3,151.2 L514.7,149.7 L522.5,153.5 L532.4,152.8 L539.2,154.5 L542.4,159.1 L546.5,173.6 L532.4,173.6 L526.7,170.7 L524.8,173.0 L526.0,175.6 L524.9,175.2 L525.0,178.2 L522.1,180.6 L520.6,177.0 L515.0,178.3 L514.3,176.4 L511.5,176.7 L512.9,171.4 L516.0,168.7 L515.0,167.0 L507.9,169.3 L502.6,174.0 Z" style="fill:var(--sem-meta)" class="uf"><title>RN: sem meta (sem parceiros no quadro)</title></path><path d="M500.9,192.8 L499.3,190.7 L496.1,191.8 L494.2,189.9 L496.9,185.1 L493.7,179.6 L495.6,177.9 L496.8,171.4 L502.6,174.0 L507.9,169.3 L515.0,167.0 L516.0,168.7 L512.9,171.4 L511.5,176.7 L514.3,176.4 L515.0,178.3 L520.6,177.0 L522.1,180.6 L525.0,178.2 L524.9,175.2 L526.0,175.6 L524.8,173.0 L526.7,170.7 L532.4,173.6 L546.5,173.6 L547.9,182.0 L549.0,183.0 L548.4,188.8 L545.0,186.6 L539.4,187.2 L538.7,190.2 L526.3,192.7 L523.4,196.8 L518.3,199.6 L515.6,194.7 L513.2,195.0 L516.1,192.1 L515.8,189.4 L518.5,187.8 L515.0,184.8 L504.7,192.1 L500.9,192.8 Z M547.9,180.9 L548.2,180.6 L548.0,181.2 L547.9,180.9 Z" style="fill:var(--sem-meta)" class="uf"><title>PB: sem meta (sem parceiros no quadro)</title></path><path d="M500.9,214.3 L497.2,207.2 L495.4,209.5 L493.1,206.6 L487.1,205.4 L484.9,202.9 L478.0,207.2 L477.0,210.3 L472.8,210.5 L471.8,214.6 L467.8,216.5 L465.6,216.1 L467.1,211.9 L463.6,207.3 L457.5,205.4 L468.2,197.3 L468.9,193.0 L467.1,191.8 L466.5,187.8 L469.2,185.5 L480.3,185.6 L489.1,193.2 L494.4,189.8 L496.1,191.8 L499.3,190.7 L500.2,192.8 L503.2,192.8 L515.0,184.8 L518.5,187.8 L515.8,189.4 L516.1,192.1 L513.2,195.0 L515.6,194.7 L518.3,199.6 L523.4,196.8 L526.3,192.7 L538.7,190.2 L539.4,187.2 L545.0,186.6 L548.4,188.8 L546.9,200.3 L544.1,199.7 L542.7,201.3 L545.4,204.0 L544.0,208.3 L533.5,207.5 L530.3,209.0 L529.1,212.1 L523.8,214.5 L520.0,213.5 L519.0,215.1 L511.4,209.2 L508.5,209.5 L507.6,207.6 L500.9,214.3 Z M545.9,201.6 L545.7,201.9 L545.7,201.6 L545.9,201.6 Z M582.3,135.4 L581.7,136.0 L581.5,136.1 L581.2,136.0 L582.3,135.4 Z" style="fill:var(--div-neg-1)" class="uf"><title>PE: 78,6% da meta de pessoas atendidas</title></path><path d="M515.6,222.5 L501.5,215.6 L507.3,207.6 L518.9,215.1 L520.0,213.5 L523.8,214.5 L529.1,212.1 L530.3,209.0 L533.5,207.5 L544.0,208.2 L526.7,231.1 L515.6,222.5 Z" style="fill:var(--sem-meta)" class="uf"><title>AL: sem meta (sem parceiros no quadro)</title></path><path d="M512.6,245.4 L506.9,245.8 L501.1,237.2 L501.4,234.3 L506.9,233.9 L506.2,230.1 L508.0,228.7 L506.6,224.0 L504.3,222.8 L504.3,216.9 L518.3,223.5 L526.7,231.1 L520.3,234.6 L512.6,245.4 Z" style="fill:var(--sem-meta)" class="uf"><title>SE: sem meta (sem parceiros no quadro)</title></path><path d="M447.3,298.5 L435.5,291.6 L431.3,290.9 L427.2,293.0 L422.6,291.0 L423.8,286.3 L417.8,284.7 L391.7,299.5 L393.3,295.3 L392.6,287.4 L394.1,286.4 L389.1,282.8 L390.6,275.5 L389.5,273.2 L392.3,271.1 L388.5,271.3 L388.4,268.5 L391.3,265.9 L388.7,266.3 L388.9,261.0 L390.7,259.6 L388.0,257.6 L387.3,253.3 L390.5,251.2 L387.7,250.8 L388.5,247.4 L391.7,247.5 L386.1,245.8 L384.3,242.1 L388.9,237.0 L389.9,233.3 L395.2,230.3 L398.3,225.5 L403.3,235.7 L407.7,237.3 L412.6,233.0 L416.1,231.9 L418.9,233.0 L425.4,224.0 L422.8,217.5 L427.8,213.3 L430.7,215.6 L435.0,215.5 L438.0,218.5 L444.2,214.2 L450.8,213.1 L457.2,205.4 L461.0,205.3 L467.1,211.9 L465.6,216.1 L467.8,216.5 L471.8,214.6 L472.8,210.5 L477.0,210.3 L478.0,207.2 L484.6,203.0 L487.1,205.4 L493.1,206.6 L495.4,209.5 L497.2,207.2 L497.3,209.3 L500.1,209.9 L501.5,215.6 L504.3,216.8 L504.3,222.8 L506.6,224.0 L508.0,228.7 L506.2,230.1 L506.9,233.9 L501.4,234.3 L501.1,237.2 L506.9,245.8 L513.5,244.6 L503.6,261.7 L499.4,266.3 L495.6,266.0 L490.9,271.1 L491.9,276.5 L490.3,277.7 L491.3,280.5 L489.4,291.4 L492.3,308.1 L487.4,326.9 L488.4,334.2 L482.0,332.5 L479.6,333.5 L477.4,331.1 L472.8,330.4 L473.2,332.4 L478.4,335.4 L486.6,336.5 L482.3,340.0 L481.0,343.8 L473.4,338.5 L473.4,334.9 L467.8,330.4 L469.6,322.7 L472.5,323.0 L472.5,318.3 L477.5,314.1 L477.7,310.1 L466.5,305.4 L457.9,306.4 L457.5,302.9 L451.3,297.2 L447.3,298.5 Z M495.2,339.4 L494.9,339.3 L495.2,339.1 L495.2,339.4 Z" style="fill:var(--div-neg-2)" class="uf"><title>BA: 59,0% da meta de pessoas atendidas</title></path><path d="M386.0,403.6 L382.8,400.7 L384.5,398.3 L382.8,397.4 L384.3,396.2 L383.2,394.0 L385.7,388.6 L383.5,387.1 L378.8,387.9 L375.6,380.2 L377.5,376.7 L374.9,374.0 L375.3,370.0 L372.4,367.0 L367.1,367.4 L366.4,369.4 L361.6,368.0 L361.6,369.5 L353.4,369.8 L352.4,373.9 L350.9,369.7 L347.8,371.8 L347.4,367.0 L330.6,364.4 L323.2,368.7 L322.5,363.7 L332.8,348.9 L340.2,348.0 L343.7,345.9 L345.6,348.2 L351.9,343.3 L361.4,343.6 L365.7,346.0 L375.0,339.7 L373.8,336.4 L375.1,333.2 L371.4,330.1 L377.1,324.2 L372.5,317.3 L374.7,310.4 L381.6,308.2 L379.6,303.8 L381.1,300.5 L380.0,296.5 L385.7,296.6 L384.9,292.7 L386.1,291.4 L388.8,294.7 L392.8,294.3 L392.0,299.5 L417.8,284.7 L423.8,286.3 L422.4,290.7 L427.2,293.0 L432.1,290.7 L447.3,298.5 L451.3,297.2 L457.5,302.9 L457.9,306.4 L466.5,305.4 L477.7,310.1 L477.5,314.1 L472.4,318.7 L471.5,321.4 L472.9,322.5 L469.7,322.7 L468.5,325.3 L467.8,330.4 L473.4,334.9 L473.4,338.5 L469.0,337.2 L466.7,339.1 L464.2,338.4 L465.7,341.1 L461.7,341.3 L460.3,343.3 L463.6,350.6 L459.1,351.0 L462.2,352.7 L463.3,359.8 L460.1,362.8 L457.2,370.3 L451.9,370.5 L450.6,372.3 L451.2,376.7 L448.8,381.0 L446.5,381.5 L447.4,382.5 L443.4,390.8 L444.8,392.1 L432.7,397.8 L431.1,396.4 L423.9,397.1 L401.2,405.6 L396.7,404.6 L395.3,406.6 L396.9,407.9 L394.5,408.7 L387.8,409.2 L386.0,403.6 Z" style="fill:var(--div-mid)" class="uf"><title>MG: 99,5% da meta de pessoas atendidas</title></path><path d="M463.2,385.3 L452.5,383.6 L452.6,380.0 L450.2,378.4 L450.5,372.8 L451.9,370.5 L457.2,370.3 L460.1,362.8 L463.2,359.9 L462.2,352.7 L459.1,351.0 L463.6,350.6 L460.3,343.3 L461.7,341.3 L465.7,341.1 L463.9,338.7 L464.2,338.4 L466.7,339.1 L469.0,337.2 L481.0,343.6 L480.6,358.5 L479.1,362.5 L474.5,366.8 L473.5,371.0 L471.8,371.0 L469.7,374.9 L466.9,374.3 L468.3,379.0 L465.8,379.9 L463.2,385.3 Z M470.8,376.4 L470.8,376.4 L470.8,376.4 L470.8,376.4 Z M471.4,375.0 L471.4,375.0 L471.4,375.0 L471.4,375.0 Z M472.9,372.6 L472.9,372.6 L472.9,372.6 L472.9,372.6 Z" style="fill:var(--sem-meta)" class="uf"><title>ES: sem meta (sem parceiros no quadro)</title></path><path d="M410.7,415.8 L410.7,415.8 L410.7,415.8 L410.7,415.8 Z M415.4,413.0 L419.3,413.0 L415.8,413.9 L415.4,413.0 Z M425.3,411.3 L422.6,411.2 L425.3,411.2 L425.3,411.3 Z M418.7,411.2 L418.7,411.2 L418.7,411.2 L418.7,411.2 Z M423.6,406.2 L417.6,409.6 L416.2,408.3 L417.9,405.0 L411.9,405.0 L409.6,401.8 L423.9,397.1 L433.7,397.5 L444.8,392.1 L443.4,390.8 L447.4,382.5 L446.5,381.5 L450.4,378.6 L452.6,380.0 L452.5,383.6 L463.0,386.2 L461.5,389.4 L462.6,396.4 L452.9,400.6 L448.8,398.0 L444.8,400.8 L445.9,402.4 L451.1,402.3 L448.6,405.0 L450.5,407.0 L448.4,410.6 L433.9,410.3 L433.4,406.0 L425.4,408.6 L423.6,406.2 Z M431.8,411.6 L431.8,411.6 L431.8,411.6 L431.8,411.6 Z M452.7,402.0 L452.9,402.3 L452.6,402.1 L452.7,402.0 Z" style="fill:var(--div-neg-1)" class="uf"><title>RJ: 76,6% da meta de pessoas atendidas</title></path><path d="M322.3,407.3 L307.7,403.7 L306.2,405.9 L293.8,404.9 L304.0,397.8 L318.3,372.7 L330.6,364.4 L347.4,367.0 L347.8,371.8 L350.9,369.7 L352.4,373.9 L353.4,369.8 L361.6,369.5 L361.6,368.0 L366.4,369.4 L367.1,367.4 L372.4,367.0 L375.3,370.0 L374.9,374.0 L377.5,376.7 L375.6,380.2 L378.8,387.9 L383.5,387.1 L385.7,388.6 L383.2,394.0 L384.3,396.2 L382.8,397.4 L384.5,398.3 L382.8,400.7 L387.1,404.0 L386.1,406.3 L388.2,407.2 L387.8,409.2 L395.9,408.5 L396.7,404.6 L401.2,405.6 L409.4,402.0 L411.9,405.0 L418.5,406.0 L416.9,408.2 L409.7,410.3 L409.1,412.9 L402.0,418.5 L389.5,421.8 L391.2,423.0 L388.8,425.5 L387.5,424.5 L380.3,428.6 L378.8,426.8 L377.8,431.3 L366.5,440.0 L368.7,437.0 L367.3,435.9 L364.3,436.9 L364.4,438.9 L360.4,440.3 L359.3,439.0 L357.6,440.8 L356.9,434.6 L346.7,434.4 L348.3,429.8 L342.5,422.8 L343.1,416.8 L340.9,412.2 L337.3,409.2 L326.8,410.0 L322.3,407.3 Z M365.0,442.9 L365.0,442.9 L365.0,442.9 L365.0,442.9 Z M380.3,430.6 L380.2,430.6 L380.2,430.6 L380.3,430.6 Z M402.6,423.8 L402.6,423.8 L402.6,423.8 L402.6,423.8 Z M399.5,422.8 L399.4,422.8 L399.5,422.8 L399.5,422.8 Z M392.4,422.5 L392.4,422.5 L392.6,422.5 L392.4,422.5 Z M402.9,419.2 L402.6,419.2 L402.9,419.1 L402.9,419.2 Z M404.8,418.8 L404.5,418.8 L404.5,418.6 L404.8,418.8 Z" style="fill:var(--div-neg-1)" class="uf"><title>SP: 89,8% da meta de pessoas atendidas</title></path><path d="M316.2,462.1 L286.4,457.3 L283.6,453.2 L282.9,448.2 L280.0,448.2 L279.9,446.5 L275.4,449.2 L272.8,445.9 L275.4,441.6 L277.8,430.1 L276.7,427.0 L280.0,424.2 L281.7,417.2 L285.2,415.2 L287.7,409.0 L295.7,404.4 L306.2,405.9 L307.7,403.7 L313.2,405.9 L319.6,405.9 L326.8,410.0 L337.3,409.2 L341.6,412.9 L343.1,416.8 L342.5,422.8 L348.3,429.8 L346.9,434.6 L356.9,434.6 L357.2,440.5 L361.5,439.0 L362.3,442.0 L364.7,442.6 L356.8,453.4 L348.7,453.7 L343.4,457.1 L338.0,453.8 L332.7,455.5 L329.2,453.7 L327.1,457.1 L319.8,458.3 L320.0,462.6 L317.5,464.0 L316.2,462.1 Z" style="fill:var(--div-mid)" class="uf"><title>PR: 93,9% da meta de pessoas atendidas</title></path><path d="M299.6,472.1 L295.5,471.2 L294.9,469.2 L291.0,471.2 L290.2,469.3 L288.5,470.9 L283.8,470.5 L286.0,467.2 L284.7,462.9 L286.4,457.3 L316.2,462.1 L317.5,464.0 L320.0,462.6 L319.8,458.3 L327.1,457.1 L329.2,453.7 L332.7,455.5 L338.0,453.8 L343.4,457.1 L348.7,453.7 L356.1,453.1 L358.1,456.8 L355.4,463.6 L356.9,464.9 L356.6,469.8 L358.4,470.0 L356.5,471.3 L357.7,472.8 L356.5,474.2 L360.0,474.3 L353.7,491.1 L347.0,495.0 L341.2,501.5 L337.7,499.6 L335.6,500.5 L336.6,501.8 L334.7,500.3 L337.7,498.5 L338.1,492.9 L341.4,491.3 L340.5,489.0 L329.6,488.6 L316.4,476.1 L310.8,475.5 L306.9,471.9 L299.6,472.1 Z" style="fill:var(--div-mid)" class="uf"><title>SC: 104,5% da meta de pessoas atendidas</title></path><path d="M271.4,531.6 L264.1,529.2 L259.4,523.0 L253.4,526.6 L253.3,522.4 L242.1,512.5 L238.6,512.4 L236.5,515.3 L230.7,513.8 L242.4,503.5 L245.3,498.5 L247.7,497.9 L255.2,487.6 L257.7,488.6 L256.7,485.8 L267.0,480.4 L266.3,479.2 L268.3,479.1 L270.1,475.6 L277.5,474.5 L279.0,471.6 L283.1,469.9 L286.4,471.2 L290.2,469.3 L291.0,471.2 L294.9,469.2 L295.5,471.2 L306.9,471.9 L310.8,475.5 L316.4,476.1 L329.6,488.6 L340.9,489.7 L341.4,491.3 L337.7,493.4 L337.7,498.5 L334.7,500.3 L336.6,501.8 L335.6,500.5 L337.1,500.0 L337.5,499.6 L337.7,499.6 L337.8,499.6 L341.2,501.5 L332.0,519.1 L324.7,528.9 L308.1,542.4 L309.1,539.0 L307.7,536.8 L311.3,537.9 L317.1,534.4 L317.2,532.4 L319.6,532.4 L321.0,526.3 L323.5,526.0 L323.6,524.0 L327.4,521.9 L327.1,516.1 L329.2,518.0 L328.8,513.8 L324.2,517.4 L319.7,513.8 L319.0,511.1 L319.1,515.4 L321.9,516.3 L319.0,519.1 L319.3,522.7 L318.2,520.1 L318.0,523.6 L316.2,524.5 L317.1,526.8 L314.5,527.5 L314.5,529.3 L310.2,530.1 L308.8,535.4 L306.0,536.2 L305.8,537.9 L307.4,538.7 L307.7,539.0 L307.7,539.2 L307.2,538.8 L306.2,539.2 L305.8,540.5 L307.4,539.2 L308.1,542.4 L304.9,545.0 L300.5,555.9 L290.2,564.9 L287.9,564.1 L289.3,556.2 L291.7,555.8 L293.5,551.2 L298.8,552.2 L301.0,547.4 L299.6,544.4 L300.6,541.8 L295.2,548.6 L291.3,548.7 L286.4,545.3 L284.9,541.0 L271.4,531.6 Z" style="fill:var(--div-neg-1)" class="uf"><title>RS: 71,7% da meta de pessoas atendidas</title></path><path d="M273.3,422.7 L264.3,425.1 L261.5,424.1 L259.0,405.7 L255.6,400.3 L250.6,400.3 L248.1,397.3 L241.8,400.6 L225.8,397.5 L228.2,381.0 L226.6,380.5 L227.6,378.2 L226.0,377.6 L223.3,370.0 L227.6,367.1 L223.9,364.1 L230.0,353.3 L228.9,351.7 L231.8,342.3 L233.3,342.1 L228.6,332.5 L233.3,337.4 L239.0,334.9 L243.4,328.9 L247.4,329.2 L252.0,326.9 L265.5,333.8 L273.3,331.2 L277.2,333.9 L280.3,333.2 L285.6,327.8 L285.6,333.9 L283.3,334.5 L282.1,337.7 L294.3,339.3 L294.3,343.7 L298.7,343.8 L295.9,346.6 L296.6,348.0 L303.0,348.7 L324.0,359.8 L322.3,370.8 L315.0,376.7 L314.5,381.0 L310.9,383.9 L311.1,386.9 L307.9,389.6 L308.6,391.5 L304.0,397.8 L286.8,409.9 L285.2,415.2 L281.7,417.2 L279.6,424.7 L277.4,426.0 L273.3,422.7 Z" style="fill:var(--div-neg-1)" class="uf"><title>MS: 77,0% da meta de pessoas atendidas</title></path><path d="M233.3,337.4 L227.3,330.9 L224.0,330.9 L220.1,327.0 L219.1,320.2 L221.2,313.8 L195.4,314.0 L194.5,302.5 L190.0,297.3 L194.5,297.2 L194.0,290.3 L191.0,284.1 L192.5,281.2 L191.3,278.5 L187.8,276.8 L192.4,273.5 L193.9,268.2 L196.7,265.3 L196.8,261.6 L201.0,257.6 L196.3,250.4 L196.3,246.8 L198.9,243.2 L198.1,240.0 L192.9,239.9 L191.4,238.2 L176.2,238.2 L177.5,230.0 L175.5,226.3 L177.2,218.7 L175.1,213.5 L176.6,213.1 L177.3,208.5 L175.8,206.7 L219.8,206.6 L221.6,197.1 L220.4,193.0 L223.7,185.9 L230.7,198.3 L231.4,206.2 L236.8,208.5 L242.9,215.4 L334.0,221.7 L328.8,233.4 L326.8,244.5 L328.5,258.9 L327.2,261.4 L330.1,265.3 L325.0,277.5 L325.6,282.7 L322.1,294.6 L315.7,296.8 L310.9,307.5 L305.8,308.5 L299.8,314.4 L300.3,318.0 L295.2,322.5 L292.3,328.8 L291.8,334.4 L294.3,339.3 L282.1,337.7 L283.3,334.5 L285.6,333.9 L285.6,327.8 L280.3,333.2 L277.2,333.9 L273.3,331.2 L265.5,333.8 L252.0,326.9 L247.4,329.2 L243.4,328.9 L239.0,334.9 L233.3,337.4 Z" style="fill:var(--div-pos-1)" class="uf"><title>MT: 122,6% da meta de pessoas atendidas</title></path><path d="M325.4,360.4 L309.0,352.9 L301.9,348.3 L296.2,347.6 L298.7,344.1 L299.2,338.5 L306.2,336.1 L304.4,330.6 L301.9,329.8 L307.9,330.2 L302.4,328.2 L297.7,321.2 L300.5,317.7 L299.6,314.7 L301.9,312.1 L312.0,306.1 L314.1,298.3 L322.1,294.6 L325.6,282.7 L325.0,277.5 L332.0,260.6 L335.2,258.4 L333.1,264.7 L345.9,270.9 L347.7,265.3 L349.4,264.0 L351.3,266.5 L353.0,264.2 L356.6,267.9 L356.8,271.6 L357.9,268.9 L358.8,271.2 L362.9,269.2 L362.7,271.5 L367.5,271.5 L369.4,273.8 L370.1,268.5 L372.9,271.2 L382.4,266.6 L386.6,266.6 L387.0,264.5 L387.8,266.9 L391.3,265.9 L388.4,268.5 L388.9,272.1 L392.3,271.1 L389.5,273.2 L390.6,275.5 L389.1,282.8 L394.1,286.6 L392.6,287.4 L392.4,291.2 L387.5,287.7 L384.9,292.7 L385.7,296.6 L380.0,296.6 L381.1,300.5 L379.6,303.8 L381.6,308.5 L374.4,310.7 L374.4,304.2 L373.1,302.9 L362.2,302.9 L360.9,307.8 L361.1,310.8 L374.6,310.8 L372.5,317.3 L377.1,324.2 L371.4,330.9 L375.1,333.2 L373.8,336.4 L375.0,339.7 L365.7,346.0 L361.4,343.6 L351.9,343.3 L345.6,348.2 L343.7,345.9 L340.2,348.0 L332.8,348.9 L329.6,354.8 L325.8,357.3 L325.4,360.4 Z M300.3,328.1 L301.6,330.2 L297.0,331.4 L298.1,328.5 L300.3,328.1 Z M295.2,322.5 L296.9,328.5 L294.1,329.6 L293.7,333.9 L292.0,333.1 L292.3,328.8 L295.2,322.5 Z" style="fill:var(--sem-meta)" class="uf"><title>GO: sem meta (sem parceiros no quadro)</title></path><path d="M362.2,302.9 L374.4,304.2 L374.6,310.8 L361.1,310.8 L362.2,302.9 Z" style="fill:var(--div-mid)" class="uf"><title>DF: 93,8% da meta de pessoas atendidas</title></path><text x="130.7" y="141.5" text-anchor="middle" class="t-mapa"><tspan x="130.7">AM</tspan><tspan x="130.7" dy="11">73%</tspan></text><text x="178.5" y="50.6" text-anchor="middle" class="t-mapa"><tspan x="178.5">RR</tspan><tspan x="178.5" dy="11">110%</tspan></text><text x="293.7" y="137.8" text-anchor="middle" class="t-mapa"><tspan x="293.7">PA</tspan><tspan x="293.7" dy="11">73%</tspan></text><text x="528.1" y="199.9" text-anchor="middle" class="t-mapa"><tspan x="528.1">PE</tspan><tspan x="528.1" dy="11">78%</tspan></text><text x="452.3" y="259.2" text-anchor="middle" class="t-mapa"><tspan x="452.3">BA</tspan><tspan x="452.3" dy="11">59%</tspan></text><text x="411.4" y="345.4" text-anchor="middle" class="t-mapa"><tspan x="411.4">MG</tspan><tspan x="411.4" dy="11">99%</tspan></text><text x="454.8" y="408.1" text-anchor="middle" class="t-mapa"><tspan x="454.8">RJ</tspan><tspan x="454.8" dy="11">76%</tspan></text><text x="350.2" y="403.6" text-anchor="middle" class="t-mapa"><tspan x="350.2">SP</tspan><tspan x="350.2" dy="11">89%</tspan></text><text x="314.8" y="434.2" text-anchor="middle" class="t-mapa"><tspan x="314.8">PR</tspan><tspan x="314.8" dy="11">93%</tspan></text><text x="342.6" y="473.7" text-anchor="middle" class="t-mapa"><tspan x="342.6">SC</tspan><tspan x="342.6" dy="11">104%</tspan></text><text x="287.0" y="507.0" text-anchor="middle" class="t-mapa"><tspan x="287.0">RS</tspan><tspan x="287.0" dy="11">71%</tspan></text><text x="269.8" y="372.2" text-anchor="middle" class="t-mapa"><tspan x="269.8">MS</tspan><tspan x="269.8" dy="11">77%</tspan></text><text x="254.7" y="266.3" text-anchor="middle" class="t-mapa"><tspan x="254.7">MT</tspan><tspan x="254.7" dy="11">122%</tspan></text><text x="367.9" y="305.2" text-anchor="middle" class="t-mapa"><tspan x="367.9">DF</tspan><tspan x="367.9" dy="11">93%</tspan></text><rect x="10" y="580.5295483697348" width="14" height="14" rx="3" style="fill:var(--div-neg-2)" class="uf"/><text x="29" y="592.5295483697348" class="t-eixo">abaixo de 70%</text><rect x="134" y="580.5295483697348" width="14" height="14" rx="3" style="fill:var(--div-neg-1)" class="uf"/><text x="153" y="592.5295483697348" class="t-eixo">70% a 90%</text><rect x="230" y="580.5295483697348" width="14" height="14" rx="3" style="fill:var(--div-mid)" class="uf"/><text x="249" y="592.5295483697348" class="t-eixo">90% a 110%</text><rect x="333" y="580.5295483697348" width="14" height="14" rx="3" style="fill:var(--div-pos-1)" class="uf"/><text x="352" y="592.5295483697348" class="t-eixo">110% a 130%</text><rect x="443" y="580.5295483697348" width="14" height="14" rx="3" style="fill:var(--div-pos-2)" class="uf"/><text x="462" y="592.5295483697348" class="t-eixo">130% ou mais</text><rect x="560" y="580.5295483697348" width="14" height="14" rx="3" style="fill:var(--sem-meta)" class="uf"/><text x="579" y="592.5295483697348" class="t-eixo">sem meta</text></svg>
+  <details><summary>Tabela: alcance por UF</summary><div class="tabela"><table>
+    <tr><th>UF</th><th class="n">Meta</th><th class="n">Realizado</th><th class="n">Alcance</th></tr>
+    <tr><td>BA</td><td class="n">580</td><td class="n">342</td>
+    <td class="n">59,0%</td></tr><tr><td>RS</td><td class="n">7.100</td><td class="n">5.090</td>
+    <td class="n">71,7%</td></tr><tr><td>AM</td><td class="n">8.400</td><td class="n">6.136</td>
+    <td class="n">73,0%</td></tr><tr><td>PA</td><td class="n">480</td><td class="n">351</td>
+    <td class="n">73,1%</td></tr><tr><td>RJ</td><td class="n">1.640</td><td class="n">1.256</td>
+    <td class="n">76,6%</td></tr><tr><td>MS</td><td class="n">440</td><td class="n">339</td>
+    <td class="n">77,0%</td></tr><tr><td>PE</td><td class="n">697</td><td class="n">548</td>
+    <td class="n">78,6%</td></tr><tr><td>SP</td><td class="n">10.600</td><td class="n">9.521</td>
+    <td class="n">89,8%</td></tr><tr><td>DF</td><td class="n">900</td><td class="n">844</td>
+    <td class="n">93,8%</td></tr><tr><td>PR</td><td class="n">9.400</td><td class="n">8.825</td>
+    <td class="n">93,9%</td></tr><tr><td>MG</td><td class="n">770</td><td class="n">766</td>
+    <td class="n">99,5%</td></tr><tr><td>SC</td><td class="n">5.400</td><td class="n">5.643</td>
+    <td class="n">104,5%</td></tr><tr><td>RR</td><td class="n">16.400</td><td class="n">18.111</td>
+    <td class="n">110,4%</td></tr><tr><td>MT</td><td class="n">420</td><td class="n">515</td>
+    <td class="n">122,6%</td></tr>
+  </table></div></details>
+</section>
+
+<section id="dupla-contagem">
+  <h2>4. Dupla contagem: três métodos contra o gabarito</h2>
+  <p class="sub">Quando vários parceiros atuam no mesmo município, a mesma pessoa pode ser relatada por mais de um.
+  O gabarito (57.510 pessoas únicas) vem da população sintética, antes dos relatos existirem.
+  Erro percentual sobre os relatos válidos, por setor.</p>
+  <div class="legenda"><span><i style="background:var(--series-1)"></i>Soma simples dos parceiros</span><span><i style="background:var(--series-2)"></i>Máximo por município e setor</span><span><i style="background:var(--series-3)"></i>União sob independência (com PIN) (oficial)</span></div>
+  <svg viewBox="0 0 640 314" role="img" class="grafico" aria-label="Erro percentual de cada método contra o gabarito"><line x1="370.0" y1="26" x2="370.0" y2="304" class="ref"/><text x="170.0" y="22" text-anchor="middle" class="t-eixo">-40%</text><text x="270.0" y="22" text-anchor="middle" class="t-eixo">-20%</text><text x="470.0" y="22" text-anchor="middle" class="t-eixo">+20%</text><text x="570.0" y="22" text-anchor="middle" class="t-eixo">+40%</text><text x="370.0" y="22" text-anchor="middle" class="t-eixo">0</text><text x="0" y="56.0" class="t-rotulo">Proteção</text><g class="marca"><title>Proteção: Soma simples dos parceiros, erro de 8,0%</title><rect x="170" y="33" width="400" height="14" class="alvo"/><rect x="370.0" y="34" width="39.80000000000001" height="12" rx="3" style="fill:var(--series-1)"/><text x="414.8" y="44" text-anchor="start" class="t-valor">8,0%</text></g><g class="marca"><title>Proteção: Máximo por município e setor, erro de -29,2%</title><rect x="170" y="47" width="400" height="14" class="alvo"/><rect x="224.15" y="48" width="145.85" height="12" rx="3" style="fill:var(--series-2)"/><text x="219.15" y="58" text-anchor="end" class="t-valor">-29,2%</text></g><g class="marca"><title>Proteção: União sob independência (com PIN), erro de 0,4%</title><rect x="170" y="61" width="400" height="14" class="alvo"/><rect x="370.0" y="62" width="2.1000000000000227" height="12" rx="3" style="fill:var(--series-3)"/><text x="377.1" y="72" text-anchor="start" class="t-valor">0,4%</text></g><text x="0" y="112.0" class="t-rotulo">Abrigo</text><g class="marca"><title>Abrigo: Soma simples dos parceiros, erro de 14,5%</title><rect x="170" y="89" width="400" height="14" class="alvo"/><rect x="370.0" y="90" width="72.64999999999998" height="12" rx="3" style="fill:var(--series-1)"/><text x="447.65" y="100" text-anchor="start" class="t-valor">14,5%</text></g><g class="marca"><title>Abrigo: Máximo por município e setor, erro de -29,2%</title><rect x="170" y="103" width="400" height="14" class="alvo"/><rect x="224.05" y="104" width="145.95" height="12" rx="3" style="fill:var(--series-2)"/><text x="219.05" y="114" text-anchor="end" class="t-valor">-29,2%</text></g><g class="marca"><title>Abrigo: União sob independência (com PIN), erro de 2,7%</title><rect x="170" y="117" width="400" height="14" class="alvo"/><rect x="370.0" y="118" width="13.600000000000023" height="12" rx="3" style="fill:var(--series-3)"/><text x="388.6" y="128" text-anchor="start" class="t-valor">2,7%</text></g><text x="0" y="168.0" class="t-rotulo">Integração socioeconômica</text><g class="marca"><title>Integração socioeconômica: Soma simples dos parceiros, erro de 12,4%</title><rect x="170" y="145" width="400" height="14" class="alvo"/><rect x="370.0" y="146" width="61.89999999999998" height="12" rx="3" style="fill:var(--series-1)"/><text x="436.9" y="156" text-anchor="start" class="t-valor">12,4%</text></g><g class="marca"><title>Integração socioeconômica: Máximo por município e setor, erro de -33,6%</title><rect x="170" y="159" width="400" height="14" class="alvo"/><rect x="201.90000000000003" y="160" width="168.09999999999997" height="12" rx="3" style="fill:var(--series-2)"/><text x="196.90000000000003" y="170" text-anchor="end" class="t-valor">-33,6%</text></g><g class="marca"><title>Integração socioeconômica: União sob independência (com PIN), erro de 4,2%</title><rect x="170" y="173" width="400" height="14" class="alvo"/><rect x="370.0" y="174" width="20.850000000000023" height="12" rx="3" style="fill:var(--series-3)"/><text x="395.85" y="184" text-anchor="start" class="t-valor">4,2%</text></g><text x="0" y="224.0" class="t-rotulo">Saúde</text><g class="marca"><title>Saúde: Soma simples dos parceiros, erro de 3,7%</title><rect x="170" y="201" width="400" height="14" class="alvo"/><rect x="370.0" y="202" width="18.44999999999999" height="12" rx="3" style="fill:var(--series-1)"/><text x="393.45" y="212" text-anchor="start" class="t-valor">3,7%</text></g><g class="marca"><title>Saúde: Máximo por município e setor, erro de -14,2%</title><rect x="170" y="215" width="400" height="14" class="alvo"/><rect x="298.8" y="216" width="71.19999999999999" height="12" rx="3" style="fill:var(--series-2)"/><text x="293.8" y="226" text-anchor="end" class="t-valor">-14,2%</text></g><g class="marca"><title>Saúde: União sob independência (com PIN), erro de 0,2%</title><rect x="170" y="229" width="400" height="14" class="alvo"/><rect x="370.0" y="230" width="1.5" height="12" rx="3" style="fill:var(--series-3)"/><text x="376.1" y="240" text-anchor="start" class="t-valor">0,2%</text></g><text x="0" y="280.0" class="t-rotulo">Total</text><g class="marca"><title>Total: Soma simples dos parceiros, erro de 8,1%</title><rect x="170" y="257" width="400" height="14" class="alvo"/><rect x="370.0" y="258" width="40.69999999999999" height="12" rx="3" style="fill:var(--series-1)"/><text x="415.7" y="268" text-anchor="start" class="t-valor">8,1%</text></g><g class="marca"><title>Total: Máximo por município e setor, erro de -24,5%</title><rect x="170" y="271" width="400" height="14" class="alvo"/><rect x="247.3" y="272" width="122.69999999999999" height="12" rx="3" style="fill:var(--series-2)"/><text x="242.3" y="282" text-anchor="end" class="t-valor">-24,5%</text></g><g class="marca"><title>Total: União sob independência (com PIN), erro de 1,4%</title><rect x="170" y="285" width="400" height="14" class="alvo"/><rect x="370.0" y="286" width="6.75" height="12" rx="3" style="fill:var(--series-3)"/><text x="381.75" y="296" text-anchor="start" class="t-valor">1,4%</text></g></svg>
+  <div class="tabela"><table>
+    <tr><th>Método</th><th class="n">Pessoas estimadas</th><th class="n">Erro total, relatos válidos</th>
+    <th class="n">Erro total, relatos sem erros</th><th class="n">Erro absoluto médio por setor x UF</th></tr>
+    <tr><td>Soma simples dos parceiros</td>
+    <td class="n">62.191</td><td class="n">8,1%</td>
+    <td class="n">16,5%</td><td class="n">11,0%</td></tr><tr><td>Máximo por município e setor</td>
+    <td class="n">43.396</td><td class="n">-24,5%</td>
+    <td class="n">-20,3%</td><td class="n">21,1%</td></tr><tr><td>União sob independência (com PIN) <span class="selo">oficial</span></td>
+    <td class="n">58.287</td><td class="n">1,4%</td>
+    <td class="n">8,2%</td><td class="n">7,5%</td></tr>
+  </table></div>
+  <p class="sub" style="margin-top:12px">Leitura: sobre relatos sem erros, a soma é o teto e o máximo é o piso do valor real.
+  Sobre relatos válidos, parte do erro vem dos relatos bloqueados (que reduzem todos os métodos), então um erro pequeno
+  pode ser compensação entre dupla contagem e perda de dados. A união sob independência depende da população em
+  necessidade (PIN) e supõe que os parceiros alcançam pessoas ao acaso; encaminhamentos entre parceiros violam essa suposição.</p>
+  <details><summary>Tabela: setor x UF</summary><div class="tabela"><table>
+    <tr><th>Setor</th><th>UF</th><th class="n">Gabarito</th><th class="n">Soma</th><th class="n">Máximo</th><th class="n">União</th></tr>
+    <tr><td>Abrigo</td><td>DF</td><td class="n">171</td>
+    <td class="n">171 (0,0%)</td>
+    <td class="n">171 (0,0%)</td>
+    <td class="n">171 (0,0%)</td></tr><tr><td>Abrigo</td><td>MG</td><td class="n">185</td>
+    <td class="n">146 (-21,1%)</td>
+    <td class="n">146 (-21,1%)</td>
+    <td class="n">146 (-21,1%)</td></tr><tr><td>Abrigo</td><td>PE</td><td class="n">101</td>
+    <td class="n">96 (-5,0%)</td>
+    <td class="n">96 (-5,0%)</td>
+    <td class="n">96 (-5,0%)</td></tr><tr><td>Abrigo</td><td>PR</td><td class="n">1.186</td>
+    <td class="n">1.457 (22,8%)</td>
+    <td class="n">832 (-29,8%)</td>
+    <td class="n">1.321 (11,4%)</td></tr><tr><td>Abrigo</td><td>RJ</td><td class="n">248</td>
+    <td class="n">208 (-16,1%)</td>
+    <td class="n">208 (-16,1%)</td>
+    <td class="n">208 (-16,1%)</td></tr><tr><td>Abrigo</td><td>RR</td><td class="n">4.005</td>
+    <td class="n">4.885 (22,0%)</td>
+    <td class="n">2.285 (-42,9%)</td>
+    <td class="n">4.158 (3,8%)</td></tr><tr><td>Abrigo</td><td>RS</td><td class="n">854</td>
+    <td class="n">979 (14,6%)</td>
+    <td class="n">618 (-27,6%)</td>
+    <td class="n">873 (2,2%)</td></tr><tr><td>Abrigo</td><td>SP</td><td class="n">1.452</td>
+    <td class="n">1.452 (0,0%)</td>
+    <td class="n">1.452 (0,0%)</td>
+    <td class="n">1.452 (0,0%)</td></tr><tr><td>Integração socioeconômica</td><td>BA</td><td class="n">283</td>
+    <td class="n">215 (-24,0%)</td>
+    <td class="n">215 (-24,0%)</td>
+    <td class="n">215 (-24,0%)</td></tr><tr><td>Integração socioeconômica</td><td>DF</td><td class="n">333</td>
+    <td class="n">392 (17,7%)</td>
+    <td class="n">220 (-33,9%)</td>
+    <td class="n">371 (11,4%)</td></tr><tr><td>Integração socioeconômica</td><td>MS</td><td class="n">122</td>
+    <td class="n">110 (-9,8%)</td>
+    <td class="n">110 (-9,8%)</td>
+    <td class="n">110 (-9,8%)</td></tr><tr><td>Integração socioeconômica</td><td>MT</td><td class="n">187</td>
+    <td class="n">238 (27,3%)</td>
+    <td class="n">136 (-27,3%)</td>
+    <td class="n">215 (15,0%)</td></tr><tr><td>Integração socioeconômica</td><td>PA</td><td class="n">171</td>
+    <td class="n">156 (-8,8%)</td>
+    <td class="n">156 (-8,8%)</td>
+    <td class="n">156 (-8,8%)</td></tr><tr><td>Integração socioeconômica</td><td>PE</td><td class="n">91</td>
+    <td class="n">91 (0,0%)</td>
+    <td class="n">91 (0,0%)</td>
+    <td class="n">91 (0,0%)</td></tr><tr><td>Integração socioeconômica</td><td>PR</td><td class="n">2.698</td>
+    <td class="n">3.229 (19,7%)</td>
+    <td class="n">1.943 (-28,0%)</td>
+    <td class="n">2.922 (8,3%)</td></tr><tr><td>Integração socioeconômica</td><td>RR</td><td class="n">1.648</td>
+    <td class="n">1.933 (17,3%)</td>
+    <td class="n">1.118 (-32,2%)</td>
+    <td class="n">1.838 (11,5%)</td></tr><tr><td>Integração socioeconômica</td><td>RS</td><td class="n">1.671</td>
+    <td class="n">1.707 (2,2%)</td>
+    <td class="n">978 (-41,5%)</td>
+    <td class="n">1.558 (-6,8%)</td></tr><tr><td>Integração socioeconômica</td><td>SC</td><td class="n">1.380</td>
+    <td class="n">1.559 (13,0%)</td>
+    <td class="n">777 (-43,7%)</td>
+    <td class="n">1.432 (3,8%)</td></tr><tr><td>Integração socioeconômica</td><td>SP</td><td class="n">1.769</td>
+    <td class="n">2.005 (13,3%)</td>
+    <td class="n">1.128 (-36,2%)</td>
+    <td class="n">1.877 (6,1%)</td></tr><tr><td>Proteção</td><td>AM</td><td class="n">4.146</td>
+    <td class="n">4.146 (0,0%)</td>
+    <td class="n">4.146 (0,0%)</td>
+    <td class="n">4.146 (0,0%)</td></tr><tr><td>Proteção</td><td>BA</td><td class="n">133</td>
+    <td class="n">127 (-4,5%)</td>
+    <td class="n">127 (-4,5%)</td>
+    <td class="n">127 (-4,5%)</td></tr><tr><td>Proteção</td><td>DF</td><td class="n">393</td>
+    <td class="n">302 (-23,2%)</td>
+    <td class="n">302 (-23,2%)</td>
+    <td class="n">302 (-23,2%)</td></tr><tr><td>Proteção</td><td>MG</td><td class="n">373</td>
+    <td class="n">373 (0,0%)</td>
+    <td class="n">373 (0,0%)</td>
+    <td class="n">373 (0,0%)</td></tr><tr><td>Proteção</td><td>MS</td><td class="n">271</td>
+    <td class="n">229 (-15,5%)</td>
+    <td class="n">229 (-15,5%)</td>
+    <td class="n">229 (-15,5%)</td></tr><tr><td>Proteção</td><td>MT</td><td class="n">288</td>
+    <td class="n">346 (20,1%)</td>
+    <td class="n">181 (-37,2%)</td>
+    <td class="n">300 (4,2%)</td></tr><tr><td>Proteção</td><td>PA</td><td class="n">204</td>
+    <td class="n">195 (-4,4%)</td>
+    <td class="n">195 (-4,4%)</td>
+    <td class="n">195 (-4,4%)</td></tr><tr><td>Proteção</td><td>PE</td><td class="n">118</td>
+    <td class="n">145 (22,9%)</td>
+    <td class="n">82 (-30,5%)</td>
+    <td class="n">137 (16,1%)</td></tr><tr><td>Proteção</td><td>PR</td><td class="n">2.585</td>
+    <td class="n">2.625 (1,5%)</td>
+    <td class="n">1.134 (-56,1%)</td>
+    <td class="n">2.270 (-12,2%)</td></tr><tr><td>Proteção</td><td>RJ</td><td class="n">573</td>
+    <td class="n">535 (-6,6%)</td>
+    <td class="n">535 (-6,6%)</td>
+    <td class="n">535 (-6,6%)</td></tr><tr><td>Proteção</td><td>RR</td><td class="n">3.610</td>
+    <td class="n">4.310 (19,4%)</td>
+    <td class="n">2.309 (-36,0%)</td>
+    <td class="n">3.976 (10,1%)</td></tr><tr><td>Proteção</td><td>RS</td><td class="n">1.124</td>
+    <td class="n">1.333 (18,6%)</td>
+    <td class="n">728 (-35,2%)</td>
+    <td class="n">1.173 (4,4%)</td></tr><tr><td>Proteção</td><td>SC</td><td class="n">2.045</td>
+    <td class="n">2.193 (7,2%)</td>
+    <td class="n">995 (-51,3%)</td>
+    <td class="n">1.920 (-6,1%)</td></tr><tr><td>Proteção</td><td>SP</td><td class="n">2.170</td>
+    <td class="n">2.610 (20,3%)</td>
+    <td class="n">1.437 (-33,8%)</td>
+    <td class="n">2.425 (11,8%)</td></tr><tr><td>Saúde</td><td>AM</td><td class="n">1.990</td>
+    <td class="n">1.990 (0,0%)</td>
+    <td class="n">1.990 (0,0%)</td>
+    <td class="n">1.990 (0,0%)</td></tr><tr><td>Saúde</td><td>MG</td><td class="n">247</td>
+    <td class="n">247 (0,0%)</td>
+    <td class="n">247 (0,0%)</td>
+    <td class="n">247 (0,0%)</td></tr><tr><td>Saúde</td><td>PE</td><td class="n">248</td>
+    <td class="n">224 (-9,7%)</td>
+    <td class="n">224 (-9,7%)</td>
+    <td class="n">224 (-9,7%)</td></tr><tr><td>Saúde</td><td>PR</td><td class="n">2.552</td>
+    <td class="n">2.503 (-1,9%)</td>
+    <td class="n">1.489 (-41,7%)</td>
+    <td class="n">2.312 (-9,4%)</td></tr><tr><td>Saúde</td><td>RJ</td><td class="n">513</td>
+    <td class="n">513 (0,0%)</td>
+    <td class="n">513 (0,0%)</td>
+    <td class="n">513 (0,0%)</td></tr><tr><td>Saúde</td><td>RR</td><td class="n">8.139</td>
+    <td class="n">8.139 (0,0%)</td>
+    <td class="n">8.139 (0,0%)</td>
+    <td class="n">8.139 (0,0%)</td></tr><tr><td>Saúde</td><td>RS</td><td class="n">1.410</td>
+    <td class="n">1.586 (12,5%)</td>
+    <td class="n">1.009 (-28,4%)</td>
+    <td class="n">1.486 (5,4%)</td></tr><tr><td>Saúde</td><td>SC</td><td class="n">2.294</td>
+    <td class="n">2.368 (3,2%)</td>
+    <td class="n">2.122 (-7,5%)</td>
+    <td class="n">2.291 (-0,1%)</td></tr><tr><td>Saúde</td><td>SP</td><td class="n">3.529</td>
+    <td class="n">4.123 (16,8%)</td>
+    <td class="n">2.210 (-37,4%)</td>
+    <td class="n">3.767 (6,7%)</td></tr>
+  </table></div></details>
+</section>
+
+<section id="qualidade">
+  <h2>5. Qualidade dos relatos</h2>
+  <p class="sub">Erro bloqueia o relato até a correção; alerta não bloqueia. Detecção medida contra os erros injetados pelo gerador.</p>
+  <div class="tabela"><table>
+    <tr><th>Regra</th><th>Severidade</th><th>Erro injetado</th><th class="n">Injetados</th><th class="n">Detectados</th>
+    <th class="n">Detecção</th><th class="n">Sinalizados</th><th class="n">Precisão</th></tr>
+    <tr><td>V01 Campos obrigatórios e período</td><td>erro</td><td>(não injetado)</td>
+    <td class="n">0</td><td class="n">0</td>
+    <td class="n">·</td>
+    <td class="n">0</td>
+    <td class="n">·</td></tr><tr><td>V02 Indicador fora do quadro</td><td>erro</td><td>indicador_fora_do_quadro</td>
+    <td class="n">21</td><td class="n">21</td>
+    <td class="n">100,0%</td>
+    <td class="n">21</td>
+    <td class="n">100,0%</td></tr><tr><td>V03 Código de município inválido</td><td>erro</td><td>municipio_invalido</td>
+    <td class="n">36</td><td class="n">36</td>
+    <td class="n">100,0%</td>
+    <td class="n">36</td>
+    <td class="n">100,0%</td></tr><tr><td>V04 Município fora da UF</td><td>erro</td><td>municipio_fora_uf</td>
+    <td class="n">36</td><td class="n">36</td>
+    <td class="n">100,0%</td>
+    <td class="n">36</td>
+    <td class="n">100,0%</td></tr><tr><td>V05 Relato duplicado</td><td>erro</td><td>relato_duplicado</td>
+    <td class="n">71</td><td class="n">71</td>
+    <td class="n">100,0%</td>
+    <td class="n">71</td>
+    <td class="n">100,0%</td></tr><tr><td>V06 Desagregação não soma o total</td><td>erro</td><td>desagregacao_inconsistente</td>
+    <td class="n">107</td><td class="n">107</td>
+    <td class="n">100,0%</td>
+    <td class="n">107</td>
+    <td class="n">100,0%</td></tr><tr><td>V07 Valor implausível</td><td>erro</td><td>valor_implausivel</td>
+    <td class="n">21</td><td class="n">16</td>
+    <td class="n">76,2%</td>
+    <td class="n">18</td>
+    <td class="n">88,9%</td></tr><tr><td>V08 Acumulado informado como mensal</td><td>erro</td><td>acumulado_como_mensal</td>
+    <td class="n">68</td><td class="n">67</td>
+    <td class="n">98,5%</td>
+    <td class="n">67</td>
+    <td class="n">100,0%</td></tr><tr><td>V09 Relato fora do prazo</td><td>alerta</td><td>fora_do_prazo</td>
+    <td class="n">249</td><td class="n">249</td>
+    <td class="n">100,0%</td>
+    <td class="n">249</td>
+    <td class="n">100,0%</td></tr><tr><td>V10 Variação atípica</td><td>alerta</td><td>(não injetado)</td>
+    <td class="n">0</td><td class="n">0</td>
+    <td class="n">·</td>
+    <td class="n">21</td>
+    <td class="n">·</td></tr>
+  </table></div>
+  <h3 style="font-size:1rem;margin:20px 0 4px">Índice de qualidade por parceiro</h3>
+  <p class="sub">50% validade (relatos sem erro) + 25% conformidade (sem variação atípica) + 25% pontualidade. Faixas: A ≥ 95, B ≥ 85, C &lt; 85.
+  O detalhe de cada pendência, com a mensagem para o parceiro, está em <code>reports/pendencias_por_parceiro.csv</code>.</p>
+  <div class="tabela"><table>
+    <tr><th>Parceiro</th><th class="n">Relatos</th><th class="n">Erros</th><th class="n">Alertas</th><th class="n">Validade</th>
+    <th class="n">Pontualidade</th><th class="n">Índice</th><th></th><th>Faixa</th></tr>
+    <tr><td>P04 Instituto Buriti da Rocha</td><td class="n">112</td>
+    <td class="n">28</td><td class="n">5</td><td class="n">75,0%</td>
+    <td class="n">96,4%</td><td class="n">86,4</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="103.7" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P20 Centro Ingá Sá</td><td class="n">73</td>
+    <td class="n">13</td><td class="n">8</td><td class="n">84,9%</td>
+    <td class="n">91,8%</td><td class="n">89,7</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="107.6" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P15 Coletivo Mogno Monteiro</td><td class="n">74</td>
+    <td class="n">11</td><td class="n">8</td><td class="n">85,1%</td>
+    <td class="n">89,2%</td><td class="n">89,8</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="107.8" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P14 Instituto Jequitibá Novais</td><td class="n">80</td>
+    <td class="n">13</td><td class="n">6</td><td class="n">83,8%</td>
+    <td class="n">92,5%</td><td class="n">90,0</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="108.0" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P08 Rede Sapucaia Silveira</td><td class="n">49</td>
+    <td class="n">7</td><td class="n">3</td><td class="n">85,7%</td>
+    <td class="n">93,9%</td><td class="n">91,3</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="109.6" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P13 Centro Cumaru Moreira</td><td class="n">109</td>
+    <td class="n">14</td><td class="n">10</td><td class="n">87,2%</td>
+    <td class="n">90,8%</td><td class="n">91,3</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="109.6" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P17 Rede Pitanga Jesus</td><td class="n">72</td>
+    <td class="n">10</td><td class="n">3</td><td class="n">86,1%</td>
+    <td class="n">97,2%</td><td class="n">92,0</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="110.4" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P22 Centro Murici Costa</td><td class="n">74</td>
+    <td class="n">10</td><td class="n">3</td><td class="n">86,5%</td>
+    <td class="n">97,3%</td><td class="n">92,2</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="110.6" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P21 Rede Caju Teixeira</td><td class="n">182</td>
+    <td class="n">17</td><td class="n">20</td><td class="n">90,7%</td>
+    <td class="n">92,9%</td><td class="n">92,6</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="111.1" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P05 Rede Cedro Macedo</td><td class="n">24</td>
+    <td class="n">3</td><td class="n">1</td><td class="n">87,5%</td>
+    <td class="n">95,8%</td><td class="n">92,7</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="111.2" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P06 Associação Jacarandá Abreu</td><td class="n">147</td>
+    <td class="n">17</td><td class="n">9</td><td class="n">88,4%</td>
+    <td class="n">94,6%</td><td class="n">92,7</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="111.2" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P07 Fundação Angico Vasconcelos</td><td class="n">36</td>
+    <td class="n">3</td><td class="n">4</td><td class="n">91,7%</td>
+    <td class="n">88,9%</td><td class="n">93,1</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="111.7" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P16 Rede Oiti Moreira</td><td class="n">217</td>
+    <td class="n">24</td><td class="n">12</td><td class="n">88,9%</td>
+    <td class="n">94,5%</td><td class="n">93,1</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="111.7" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P10 Rede Pequi Souza</td><td class="n">74</td>
+    <td class="n">6</td><td class="n">8</td><td class="n">91,9%</td>
+    <td class="n">89,2%</td><td class="n">93,2</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="111.8" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P25 Instituto Bacuri Andrade</td><td class="n">62</td>
+    <td class="n">5</td><td class="n">6</td><td class="n">91,9%</td>
+    <td class="n">90,3%</td><td class="n">93,5</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="112.2" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P01 Instituto Ipê Duarte</td><td class="n">494</td>
+    <td class="n">45</td><td class="n">33</td><td class="n">90,9%</td>
+    <td class="n">93,3%</td><td class="n">93,8</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="112.6" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P11 Centro Baru Costela</td><td class="n">183</td>
+    <td class="n">17</td><td class="n">11</td><td class="n">90,7%</td>
+    <td class="n">94,5%</td><td class="n">93,8</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="112.6" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P23 Instituto Umbu Rodrigues</td><td class="n">74</td>
+    <td class="n">5</td><td class="n">8</td><td class="n">93,2%</td>
+    <td class="n">90,5%</td><td class="n">93,9</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="112.7" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P02 Associação Jatobá Câmara</td><td class="n">370</td>
+    <td class="n">30</td><td class="n">28</td><td class="n">91,9%</td>
+    <td class="n">92,4%</td><td class="n">94,1</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="112.9" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P19 Centro Embaúba da Mota</td><td class="n">75</td>
+    <td class="n">6</td><td class="n">5</td><td class="n">92,0%</td>
+    <td class="n">93,3%</td><td class="n">94,3</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="113.2" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P03 Rede Aroeira Novais</td><td class="n">659</td>
+    <td class="n">47</td><td class="n">55</td><td class="n">92,9%</td>
+    <td class="n">92,4%</td><td class="n">94,4</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="113.3" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P09 Rede Copaíba Câmara</td><td class="n">121</td>
+    <td class="n">8</td><td class="n">11</td><td class="n">93,4%</td>
+    <td class="n">90,9%</td><td class="n">94,4</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="113.3" height="10" rx="3" class="barra"/></svg></td><td>B</td></tr><tr><td>P24 Coletivo Tarumã Novaes</td><td class="n">62</td>
+    <td class="n">4</td><td class="n">4</td><td class="n">93,5%</td>
+    <td class="n">95,2%</td><td class="n">95,1</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="114.1" height="10" rx="3" class="barra"/></svg></td><td>A</td></tr><tr><td>P12 Coletivo Andiroba Rocha</td><td class="n">136</td>
+    <td class="n">8</td><td class="n">7</td><td class="n">94,1%</td>
+    <td class="n">94,9%</td><td class="n">95,8</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="115.0" height="10" rx="3" class="barra"/></svg></td><td>A</td></tr><tr><td>P18 Rede Guapuruvu Carvalho</td><td class="n">75</td>
+    <td class="n">5</td><td class="n">2</td><td class="n">93,3%</td>
+    <td class="n">97,3%</td><td class="n">96,0</td>
+    <td><svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true"><rect width="120" height="10" rx="3" class="trilho"/><rect width="115.2" height="10" rx="3" class="barra"/></svg></td><td>A</td></tr>
+  </table></div>
+</section>
+
+<section id="metodo">
+  <h2>6. Método e limites</h2>
+  <ul>
+    <li>Gerador, regras e metas foram escritos pela mesma autora: as taxas de detecção medem a coerência do método, não o desempenho em dados reais.</li>
+    <li>O gabarito de pessoas únicas só existe porque os dados são sintéticos. Em operação real, deduplicar pessoas exige cruzamento de registros com acordo de compartilhamento de dados.</li>
+    <li>Tabelas desagregadas por sexo e faixa etária são publicadas com controle de divulgação: nenhuma célula de 1 a 4 pessoas (k = 5), com supressão secundária.</li>
+  </ul>
+</section>
+<footer>Gerado por <code>make run</code> · monitoring-5w-kit · licença MIT</footer>
+</main>
+</body>
+</html>

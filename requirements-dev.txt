@@ -1,0 +1,2 @@
+# Só para reconstruir data/ref (scripts/construir_refs.py). Não é usado pelo pipeline nem pelo CI.
+shapely==2.2.0

@@ -1,0 +1,307 @@
+{
+  "agregacao": {
+    "alcance_pessoas_por_setor_pct": {
+      "abrigo": 105.4,
+      "integracao": 86.8,
+      "protecao": 91.2,
+      "saude": 91.4
+    },
+    "alcance_pessoas_por_uf_pct": {
+      "AM": 73.0,
+      "BA": 59.0,
+      "DF": 93.8,
+      "MG": 99.5,
+      "MS": 77.0,
+      "MT": 122.6,
+      "PA": 73.1,
+      "PE": 78.6,
+      "PR": 93.9,
+      "RJ": 76.6,
+      "RR": 110.4,
+      "RS": 71.7,
+      "SC": 104.5,
+      "SP": 89.8
+    },
+    "alcance_por_indicador": {
+      "ABR-01": {
+        "alcance_pct": 105.4,
+        "meta": 7995,
+        "realizado": 8425
+      },
+      "ABR-02": {
+        "alcance_pct": 93.1,
+        "meta": 2383,
+        "realizado": 2219
+      },
+      "ABR-03": {
+        "alcance_pct": 76.0,
+        "meta": 17610,
+        "realizado": 13382
+      },
+      "INT-01": {
+        "alcance_pct": 86.8,
+        "meta": 12422,
+        "realizado": 10785
+      },
+      "INT-02": {
+        "alcance_pct": 109.2,
+        "meta": 2408,
+        "realizado": 2630
+      },
+      "PRO-01": {
+        "alcance_pct": 91.2,
+        "meta": 19860,
+        "realizado": 18108
+      },
+      "PRO-02": {
+        "alcance_pct": 96.2,
+        "meta": 19040,
+        "realizado": 18322
+      },
+      "PRO-03": {
+        "alcance_pct": 94.4,
+        "meta": 8358,
+        "realizado": 7890
+      },
+      "SAU-01": {
+        "alcance_pct": 91.4,
+        "meta": 22950,
+        "realizado": 20969
+      },
+      "SAU-02": {
+        "alcance_pct": 96.1,
+        "meta": 65670,
+        "realizado": 63133
+      },
+      "SAU-03": {
+        "alcance_pct": 114.6,
+        "meta": 96,
+        "realizado": 110
+      }
+    },
+    "divulgacao": {
+      "celulas_de_1_a_4_publicadas": 0,
+      "celulas_publicadas": 525,
+      "limiar_k": 5,
+      "suprimidas_primaria": 39,
+      "suprimidas_secundaria": 10
+    },
+    "erro_metodos_relatos_sem_erros": {
+      "maximo_municipio": {
+        "erro_absoluto_medio_setor_uf_pct": 14.98,
+        "erro_por_setor_pct": {
+          "abrigo": -25.02,
+          "integracao": -26.05,
+          "protecao": -23.6,
+          "saude": -12.76
+        },
+        "erro_total_pct": -20.3
+      },
+      "soma_simples": {
+        "erro_absoluto_medio_setor_uf_pct": 12.72,
+        "erro_por_setor_pct": {
+          "abrigo": 21.76,
+          "integracao": 23.02,
+          "protecao": 17.76,
+          "saude": 10.04
+        },
+        "erro_total_pct": 16.47
+      },
+      "uniao_independente": {
+        "erro_absoluto_medio_setor_uf_pct": 6.65,
+        "erro_por_setor_pct": {
+          "abrigo": 8.12,
+          "integracao": 13.39,
+          "protecao": 8.68,
+          "saude": 5.19
+        },
+        "erro_total_pct": 8.18
+      }
+    },
+    "erro_metodos_relatos_validos": {
+      "maximo_municipio": {
+        "erro_absoluto_medio_setor_uf_pct": 21.12,
+        "erro_por_setor_pct": {
+          "abrigo": -29.19,
+          "integracao": -33.62,
+          "protecao": -29.17,
+          "saude": -14.24
+        },
+        "erro_total_pct": -24.54
+      },
+      "soma_simples": {
+        "erro_absoluto_medio_setor_uf_pct": 11.02,
+        "erro_por_setor_pct": {
+          "abrigo": 14.53,
+          "integracao": 12.38,
+          "protecao": 7.96,
+          "saude": 3.69
+        },
+        "erro_total_pct": 8.14
+      },
+      "uniao_independente": {
+        "erro_absoluto_medio_setor_uf_pct": 7.51,
+        "erro_por_setor_pct": {
+          "abrigo": 2.72,
+          "integracao": 4.17,
+          "protecao": 0.42,
+          "saude": 0.22
+        },
+        "erro_total_pct": 1.35
+      }
+    },
+    "metas_abaixo_de_50_pct": 1,
+    "metas_atingidas": 50,
+    "metas_indicador_uf": 115,
+    "metodo_oficial_pessoas_unicas": "uniao_independente",
+    "pessoas_unicas_estimadas": {
+      "maximo_municipio": 43396,
+      "soma_simples": 62191,
+      "uniao_independente": 58287
+    },
+    "pessoas_unicas_gabarito": 57510,
+    "soma_indevida_de_estoque": {
+      "ABR-02": {
+        "correto": 2188,
+        "inflacao_pct": 700.9,
+        "regra": "maximo",
+        "somando_meses": 17523
+      },
+      "INT-02": {
+        "correto": 2630,
+        "inflacao_pct": 387.0,
+        "regra": "ultimo",
+        "somando_meses": 12808
+      },
+      "PRO-03": {
+        "correto": 7890,
+        "inflacao_pct": 412.8,
+        "regra": "ultimo",
+        "somando_meses": 40458
+      },
+      "SAU-03": {
+        "correto": 95,
+        "inflacao_pct": 694.7,
+        "regra": "maximo",
+        "somando_meses": 755
+      }
+    }
+  },
+  "geracao": {
+    "erros_injetados_por_tipo": {
+      "acumulado_como_mensal": 68,
+      "desagregacao_inconsistente": 107,
+      "fora_do_prazo": 249,
+      "indicador_fora_do_quadro": 21,
+      "municipio_fora_uf": 36,
+      "municipio_invalido": 36,
+      "relato_duplicado": 71,
+      "valor_implausivel": 21
+    },
+    "municipios": 23,
+    "parceiros": 25,
+    "pct_pessoas_com_mais_de_um_parceiro": 14.62,
+    "pct_relatos_com_erro_injetado": 16.76,
+    "pessoas_unicas": 57510,
+    "relatos": 3634,
+    "relatos_com_erro_injetado": 609,
+    "ufs": 14,
+    "vinculos_pessoa_parceiro": 66981
+  },
+  "validacao": {
+    "deteccao_global_pct": 99.01,
+    "deteccao_por_regra": {
+      "V02": {
+        "detectados": 21,
+        "injetados": 21,
+        "precisao_pct": 100.0,
+        "sinalizados": 21,
+        "taxa_deteccao_pct": 100.0,
+        "tipo": "indicador_fora_do_quadro"
+      },
+      "V03": {
+        "detectados": 36,
+        "injetados": 36,
+        "precisao_pct": 100.0,
+        "sinalizados": 36,
+        "taxa_deteccao_pct": 100.0,
+        "tipo": "municipio_invalido"
+      },
+      "V04": {
+        "detectados": 36,
+        "injetados": 36,
+        "precisao_pct": 100.0,
+        "sinalizados": 36,
+        "taxa_deteccao_pct": 100.0,
+        "tipo": "municipio_fora_uf"
+      },
+      "V05": {
+        "detectados": 71,
+        "injetados": 71,
+        "precisao_pct": 100.0,
+        "sinalizados": 71,
+        "taxa_deteccao_pct": 100.0,
+        "tipo": "relato_duplicado"
+      },
+      "V06": {
+        "detectados": 107,
+        "injetados": 107,
+        "precisao_pct": 100.0,
+        "sinalizados": 107,
+        "taxa_deteccao_pct": 100.0,
+        "tipo": "desagregacao_inconsistente"
+      },
+      "V07": {
+        "detectados": 16,
+        "injetados": 21,
+        "precisao_pct": 88.9,
+        "sinalizados": 18,
+        "taxa_deteccao_pct": 76.2,
+        "tipo": "valor_implausivel"
+      },
+      "V08": {
+        "detectados": 67,
+        "injetados": 68,
+        "precisao_pct": 100.0,
+        "sinalizados": 67,
+        "taxa_deteccao_pct": 98.5,
+        "tipo": "acumulado_como_mensal"
+      },
+      "V09": {
+        "detectados": 249,
+        "injetados": 249,
+        "precisao_pct": 100.0,
+        "sinalizados": 249,
+        "taxa_deteccao_pct": 100.0,
+        "tipo": "fora_do_prazo"
+      }
+    },
+    "implausiveis_nao_bloqueados_com_alerta_v10": 5,
+    "indice_qualidade": {
+      "maximo": 96.0,
+      "media": 92.8,
+      "minimo": 86.4,
+      "parceiros_por_faixa": {
+        "A": 3,
+        "B": 22
+      }
+    },
+    "pct_relatos_bloqueados": 9.74,
+    "pendencias": 626,
+    "relatos_bloqueados": 354,
+    "relatos_com_alerta": 262,
+    "relatos_recebidos": 3634,
+    "relatos_validos": 3280,
+    "sinalizacoes_por_regra": {
+      "V02": 21,
+      "V03": 36,
+      "V04": 36,
+      "V05": 71,
+      "V06": 107,
+      "V07": 18,
+      "V08": 67,
+      "V09": 249,
+      "V10": 21
+    }
+  }
+}

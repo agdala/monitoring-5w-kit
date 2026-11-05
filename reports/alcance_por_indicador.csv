@@ -1,0 +1,12 @@
+setor,setor_nome,indicador,indicador_nome,unidade,meta,realizado,alcance_pct
+abrigo,Abrigo,ABR-01,Pessoas atendidas com abrigo temporário (novas no mês),pessoas,7995,8425,105.4
+abrigo,Abrigo,ABR-02,Pessoas abrigadas no último dia do mês,pessoas,2383,2219,93.1
+abrigo,Abrigo,ABR-03,Kits de itens não alimentares distribuídos,atividades,17610,13382,76.0
+integracao,Integração socioeconômica,INT-01,Pessoas atendidas em integração socioeconômica (novas no mês),pessoas,12422,10785,86.8
+integracao,Integração socioeconômica,INT-02,Pessoas inseridas no mercado de trabalho (acumulado no ano),pessoas,2408,2630,109.2
+protecao,Proteção,PRO-01,Pessoas atendidas em gestão de casos de proteção (novas no mês),pessoas,19860,18108,91.2
+protecao,Proteção,PRO-02,Sessões de orientação jurídica e informação sobre direitos,atividades,19040,18322,96.2
+protecao,Proteção,PRO-03,Pessoas com documentação regularizada (acumulado no ano),pessoas,8358,7890,94.4
+saude,Saúde,SAU-01,Pessoas atendidas em serviços de saúde (novas no mês),pessoas,22950,20969,91.4
+saude,Saúde,SAU-02,Consultas e atendimentos de saúde realizados,atividades,65670,63133,96.1
+saude,Saúde,SAU-03,Unidades de saúde apoiadas,atividades,96,110,114.6

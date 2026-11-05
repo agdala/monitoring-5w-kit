@@ -1,0 +1,11 @@
+regra,regra_nome,severidade,tipo_erro_injetado,injetados,detectados,taxa_deteccao_pct,sinalizados,precisao_pct
+V01,Campos obrigatórios e período,erro,(não injetado),0,0,,0,
+V02,Indicador fora do quadro,erro,indicador_fora_do_quadro,21,21,100.0,21,100.0
+V03,Código de município inválido,erro,municipio_invalido,36,36,100.0,36,100.0
+V04,Município fora da UF,erro,municipio_fora_uf,36,36,100.0,36,100.0
+V05,Relato duplicado,erro,relato_duplicado,71,71,100.0,71,100.0
+V06,Desagregação não soma o total,erro,desagregacao_inconsistente,107,107,100.0,107,100.0
+V07,Valor implausível,erro,valor_implausivel,21,16,76.2,18,88.9
+V08,Acumulado informado como mensal,erro,acumulado_como_mensal,68,67,98.5,67,100.0
+V09,Relato fora do prazo,alerta,fora_do_prazo,249,249,100.0,249,100.0
+V10,Variação atípica,alerta,(não injetado),0,0,,21,
